@@ -1,5 +1,6 @@
 package com.bbookk.api;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,9 +12,11 @@ import reactor.core.publisher.Mono;
 @RestController
 public class MemberApiController {
 
+    @Value("${apis.kakao.restApiKey}") String key;
     @GetMapping("/member/searchBook")
     public String searchBook(@RequestParam("query") String query)
     {
+        System.out.println(key);
         Mono<String> mono = WebClient.builder()
                 .baseUrl("https://dapi.kakao.com")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -21,7 +24,7 @@ public class MemberApiController {
                 .uri(builder -> builder.path("/v3/search/book")
                         .queryParam("query", query)
                         .build())
-                .header("Authorization", "KakaoAK "+"de56b657ef46f3b99834428dc7d579df")
+                .header("Authorization", "KakaoAK "+key)
                 .exchangeToMono(response -> {
                     return response.bodyToMono(String.class);
                 });

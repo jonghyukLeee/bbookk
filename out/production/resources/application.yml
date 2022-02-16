@@ -18,3 +18,9 @@ spring:
 logging.level:
   org.hibernate.SQL: debug
 #  org.hibernate.type: trace
+
+#values
+apis:
+  kakao:
+    restApiKey: de56b657ef46f3b99834428dc7d579df
+
