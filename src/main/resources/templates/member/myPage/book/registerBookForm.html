@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,14 +8,129 @@
     <title>Document</title>
 
     <!-- bootstrap5 cdn-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
-<!-- bootstrap5 cdn-->
-<div th:replace="fragments/header :: header"></div>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+        integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+        integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
+        crossorigin="anonymous"></script>
+    <!-- bootstrap5 cdn-->
+   
+    <!-- JQuery-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<!-- JQuery-->
+    <div th:replace="fragments/header :: header"></div>
 </head>
-<body>
-    
+<body style="margin:2%">
+    <input type="text" id="inputQuery">
+    <button type="button" class ="btn-primary btn-sm"id="searchBtn" onclick="search()">검색</button>
+    <div class="row row-cols-2 row-cols-sm-3 g-5" id="resultArea" style="margin-top: 2%;"></div>
 </body>
+<script>
+    let resArea = document.getElementById('resultArea');
+    let cardFooter = document.createElement("p");
+    cardFooter.setAttribute('class',"fw-bold fs-4");
+    cardFooter.innerHTML = "이미지를 클릭하여 선택해주세요."
+</script>
+<script>
+    function search()
+    {
+        let query = $("#inputQuery").val();
+        if(query.length == 0)
+        {
+            alert("검색어를 입력해주세요!")
+            return;
+        }
+        $.ajax({
+            url: 'http://localhost:8080/member/searchBook',
+            method: "GET",
+            data: {query:query},
+            dataType : "json",
+            success: function(data)
+            {
+
+                while(resArea.hasChildNodes()) resArea.removeChild(resArea.firstChild);
+                let dataSize = data.documents.length;
+                if(dataSize > 3) dataSize = 3;
+                var i;
+                for(i = 0; i < dataSize; ++i)
+                {
+                    
+                    let cur = data.documents[i];
+                    let col = document.createElement("div");
+                    col.setAttribute('class','col');
+                    let card = document.createElement("div");
+                    card.setAttribute('class','card');
+                    let cardBody = document.createElement("div");
+                    cardBody.setAttribute('class','card-body');
+                    
+                    let img = document.createElement("img");
+                    img.setAttribute('src',cur.thumbnail);
+                    img.setAttribute('alt','책 이미지가 없습니다.')
+                    img.setAttribute('class',"card-img-top");
+
+                    let title = document.createElement("h5");
+                    title.setAttribute('class',"card-title");
+                    title.innerHTML = cur.title;
+
+                    let author = document.createElement("p");
+                    author.setAttribute('class',"card-text");
+                    author.innerHTML = '저자 : '.concat(cur.authors[0]);
+
+                    let publisher = document.createElement("p");
+                    publisher.setAttribute('class',"card-text");
+                    publisher.innerHTML = '출판사 : '.concat(cur.publisher);
+
+                    let isbn = document.createElement("p");
+                    isbn.setAttribute('class',"card-text");
+                    isbn.innerHTML = 'ISBN : '.concat(cur.isbn);
+
+                    cardBody.appendChild(title).appendChild(author).appendChild(publisher).appendChild(isbn);
+                    card.appendChild(img);
+                    card.appendChild(cardBody);
+                    col.appendChild(card);
+
+                    resArea.appendChild(col);
+                }
+                resArea.appendChild(cardFooter);
+            }
+        })
+    }
+</script>
+<script>
+    $(document).on("click",".col",function()
+    {
+        if(confirm('해당 도서를 선택하시겠습니까?'))
+        {
+            const tmp_img = $(this)[0].getElementsByClassName('card-img-top')[0].src;
+            const tmp_info = $(this)[0].innerText;
+            const res = tmp_img.concat('\n\n'+tmp_info);
+
+            const arr = res.split("\n\n");
+            const img = arr[0];
+            const title = arr[1];
+            const author = arr[2].split(" : ")[1];
+            const publisher = arr[3].split(" : ")[1];
+            const isbn = arr[4].split(" : ")[1];
+
+            console.log(arr);
+            console.log(img);
+            console.log(title);
+            console.log(author);
+            console.log(publisher);
+            console.log(isbn);
+            $.ajax({
+            url: '/member/registerBook',
+            method: "POST",
+            data: {img:img,title:title,author:author,publisher:publisher,isbn:isbn},
+            })
+        }
+        else return;
+    });
+</script>
 </html>

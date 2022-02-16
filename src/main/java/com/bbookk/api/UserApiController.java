@@ -22,4 +22,5 @@ public class UserApiController {
         res.put("isDuplicate", memberService.isDuplicateId(loginId));
         return res;
     }
+
 }

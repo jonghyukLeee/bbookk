@@ -1,13 +1,16 @@
 package com.bbookk.service;
 
 import com.bbookk.controller.form.ModifyForm;
+import com.bbookk.entity.Book;
 import com.bbookk.entity.Member;
+import com.bbookk.repository.BookRepository;
 import com.bbookk.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,11 +19,11 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final BookRepository bookRepository;
 
     @Transactional
     public void join(Member member)
     {
-        System.out.println("joinUser "+ member.getName());
         memberRepository.save(member);
     }
 
@@ -31,6 +34,14 @@ public class MemberService {
         findMember.modify(form);
         findMember.setPassword(form.getPassword());
         memberRepository.save(findMember);
+    }
+
+    @Transactional
+    public void addBook(Member member, Book book)
+    {
+        Optional<Member> findMember = memberRepository.findById(member.getId());
+        book.setMember(findMember.get());
+        bookRepository.save(book);
     }
 
     public boolean isDuplicateId(String loginId)

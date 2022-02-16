@@ -2,6 +2,7 @@ package com.bbookk.controller;
 
 import com.bbookk.auth.CustomUserDetails;
 import com.bbookk.controller.form.ModifyForm;
+import com.bbookk.entity.Book;
 import com.bbookk.entity.Member;
 import com.bbookk.repository.MemberRepository;
 import com.bbookk.service.MemberService;
@@ -14,9 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.EntityManager;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -55,7 +54,6 @@ public class MemberController {
     {
         return "member/myPage/info/charge";
     }
-
     @PostMapping("/member/chargeCash")
     public String chargeCash(@AuthenticationPrincipal CustomUserDetails userDetails,
                              @RequestParam(value = "amount",required = false) int amount)
@@ -96,9 +94,23 @@ public class MemberController {
     /**
      * 도서 관리
      */
-    @GetMapping("/member/registerBook")
+    @GetMapping("/member/registerBookPage")
     public String registerBook()
     {
-        return "";
+        return "member/myPage/book/registerBookForm";
+    }
+
+    @PostMapping("/member/registerBook")
+    public String registerBookInfo(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                   @RequestParam("img") String img,
+                                   @RequestParam("title") String title,
+                                   @RequestParam("author") String author,
+                                   @RequestParam("publisher") String publisher,
+                                   @RequestParam("isbn") String isbn)
+    {
+        Book book = new Book(img,title,author,publisher,isbn);
+        Member userDetailsMember = userDetails.getMember();
+        memberService.addBook(userDetailsMember,book);
+        return "/member/myPage/book/registerBookForm";
     }
 }
