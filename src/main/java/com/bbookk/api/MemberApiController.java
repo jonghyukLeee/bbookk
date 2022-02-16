@@ -16,7 +16,6 @@ public class MemberApiController {
     @GetMapping("/member/searchBook")
     public String searchBook(@RequestParam("query") String query)
     {
-        System.out.println(key);
         Mono<String> mono = WebClient.builder()
                 .baseUrl("https://dapi.kakao.com")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
