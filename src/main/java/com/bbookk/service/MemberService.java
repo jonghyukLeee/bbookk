@@ -5,11 +5,12 @@ import com.bbookk.entity.Book;
 import com.bbookk.entity.Member;
 import com.bbookk.repository.BookRepository;
 import com.bbookk.repository.MemberRepository;
+import com.bbookk.repository.dto.LibraryDto;
+import com.bbookk.repository.dto.NoneBooksDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,20 +34,31 @@ public class MemberService {
         Member findMember = memberRepository.findByLoginId(member.getLoginId());
         findMember.modify(form);
         findMember.setPassword(form.getPassword());
-        memberRepository.save(findMember);
+        //memberRepository.save(findMember);
+    }
+    @Transactional
+    public void drop(Member member)
+    {
+        memberRepository.delete(member);
     }
 
     @Transactional
     public void addBook(Member member, Book book)
     {
         Optional<Member> findMember = memberRepository.findById(member.getId());
-        book.setMember(findMember.get());
+
+        findMember.ifPresent(book::setMember);
         bookRepository.save(book);
     }
 
     public boolean isDuplicateId(String loginId)
     {
         return memberRepository.findByLoginId(loginId) != null;
+    }
+
+    public boolean isDuplicatedBook(Long id,String bookName)
+    {
+        return memberRepository.isDuplicateBook(id,bookName);
     }
 
     public boolean isMember(String loginId, String password) {
@@ -58,5 +70,20 @@ public class MemberService {
     {
         member.addCash(amount);
         memberRepository.save(member);
+    }
+
+    public List<LibraryDto> getLibrary(Member member)
+    {
+        return memberRepository.getLibrary(member.getId());
+    }
+
+    @Transactional
+    public void deleteBook(Long id, String bookName) {
+        bookRepository.delete(memberRepository.findMemberBook(id,bookName));
+    }
+
+    public List<NoneBooksDto> getBooksByGu(Long id) {
+        Optional<Member> findMember = memberRepository.findById(id);
+        return memberRepository.findBooksByGu(findMember.get().getAddress().getGu());
     }
 }

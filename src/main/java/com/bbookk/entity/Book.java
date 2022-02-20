@@ -11,7 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Book {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue()
     @Column(name = "book_id")
     private Long id;
 

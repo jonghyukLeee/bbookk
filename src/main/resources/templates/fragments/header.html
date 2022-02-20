@@ -1,17 +1,32 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <div class="header" th:fragment="header">
-  <div>
-    <span>
-      <!-- <img src='https://drive.google.com/uc?id=1s2zxtx_3NiUM3pqqMGxTR9OgXlYakPfI'> -->
-      <img src='Users/jonghyuklee/study/bbookk/src/main/resources/img/main_icon.png' alt="로고">
-      쀾
-    </span>
-    <span style="float:right">
-      <button type="button" class="btn btn-primary btn-sm" onclick="location.href='/member/myPage'">마이페이지</button>
-      <button type="button" class="btn btn-primary btn-sm" onclick="location.href='/logout'">로그아웃</button>
-    </span>
-  </div>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">
+          <img src="/img/logo" alt="로고" width="30" height="24">
+          쀾
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <p class="nav-item" onclick="location.href='/'">홈 &nbsp;</p>
+          </li>
+          <li class="nav-item">
+            <div class="nav-item" onclick="location.href='/member/myPage'">마이페이지 &nbsp;</div>
+          </li>
+          <li class="nav-item">
+            <p class="nav-item" onclick="location.href='/member/find/books'">대여하기 &nbsp;</p>
+          </li>
+        </ul>
+        <button type="button" class="btn btn-primary btn-sm" onclick="location.href='/logout'">로그아웃</button>
+      </div>
+    </div>
+  </nav>
+  
 </div>
 
 </html>

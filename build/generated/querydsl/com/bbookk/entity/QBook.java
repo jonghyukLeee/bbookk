@@ -22,15 +22,19 @@ public class QBook extends EntityPathBase<Book> {
 
     public static final QBook book = new QBook("book");
 
+    public final StringPath author = createString("author");
+
     public final StringPath bookName = createString("bookName");
 
-    public final StringPath genre = createString("genre");
-
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    public final StringPath imgSource = createString("imgSource");
 
     public final StringPath isbn = createString("isbn");
 
     public final QMember member;
+
+    public final StringPath publisher = createString("publisher");
 
     public final EnumPath<BookStatus> status = createEnum("status", BookStatus.class);
 

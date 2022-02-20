@@ -32,6 +32,7 @@ public class Member {
         this.password = password;
         this.phone = phone;
         this.address = address;
+        this.cash = 500;
         this.role = Role.ROLE_MEMBER; // default role
     }
 
@@ -48,7 +49,7 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Review> reviews = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member",orphanRemoval = true)
     private List<Book> books = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")

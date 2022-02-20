@@ -4,7 +4,8 @@ import com.bbookk.auth.CustomUserDetails;
 import com.bbookk.controller.form.ModifyForm;
 import com.bbookk.entity.Book;
 import com.bbookk.entity.Member;
-import com.bbookk.repository.MemberRepository;
+import com.bbookk.repository.dto.LibraryDto;
+import com.bbookk.repository.dto.NoneBooksDto;
 import com.bbookk.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,14 +15,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.persistence.EntityManager;
 import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
-    private final MemberRepository memberRepository;
 
     @GetMapping("/member/main")
     public String main()
@@ -46,21 +45,22 @@ public class MemberController {
         return "member/myPage";
     }
 
-    /**
-     * 캐시 충전
-     */
-    @GetMapping("/member/chargeCash")
-    public String chargePage()
-    {
-        return "member/myPage/info/charge";
-    }
-    @PostMapping("/member/chargeCash")
-    public String chargeCash(@AuthenticationPrincipal CustomUserDetails userDetails,
-                             @RequestParam(value = "amount",required = false) int amount)
-    {
-        memberService.addCash(userDetails.getMember(),amount);
-        return "redirect:/member/myPage";
-    }
+    // 충전기능 삭제
+//    /**
+//     * 캐시 충전
+//     */
+//    @GetMapping("/member/chargeCash")
+//    public String chargePage()
+//    {
+//        return "member/myPage/info/charge";
+//    }
+//    @PostMapping("/member/chargeCash")
+//    public String chargeCash(@AuthenticationPrincipal CustomUserDetails userDetails,
+//                             @RequestParam(value = "amount",required = false) int amount)
+//    {
+//        memberService.addCash(userDetails.getMember(),amount);
+//        return "redirect:/member/myPage";
+//    }
 
     /**
      * 개인정보 수정
@@ -85,15 +85,14 @@ public class MemberController {
     @GetMapping("/member/drop")
     public String drop(@AuthenticationPrincipal CustomUserDetails userDetails)
     {
-        Member principal = userDetails.getMember();
-        Optional<Member> findMember = memberRepository.findById(principal.getId());
-        findMember.ifPresent(memberRepository::delete);
+        memberService.drop(userDetails.getMember());
         return "redirect:/logout";
     }
 
     /**
      * 도서 관리
      */
+    //도서등록
     @GetMapping("/member/registerBookPage")
     public String registerBook()
     {
@@ -111,6 +110,32 @@ public class MemberController {
         Book book = new Book(img,title,author,publisher,isbn);
         Member userDetailsMember = userDetails.getMember();
         memberService.addBook(userDetailsMember,book);
-        return "/member/myPage/book/registerBookForm";
+        return "member/myPage/book/registerBookForm";
+    }
+
+    //나의 서재
+    @GetMapping("/member/myLibrary")
+    public String myLibrary(@AuthenticationPrincipal CustomUserDetails userDetails,Model model)
+    {
+        List<LibraryDto> library = memberService.getLibrary(userDetails.getMember());
+        model.addAttribute("library",library);
+        return "member/myPage/book/myLibrary";
+    }
+
+    @PostMapping("/member/deleteBook")
+    public String deleteBook(@AuthenticationPrincipal CustomUserDetails userDetails,
+                             @RequestParam("bookName") String bookName)
+    {
+        memberService.deleteBook(userDetails.getMember().getId(), bookName);
+        return "redirect:/member/myLibrary";
+    }
+
+    @GetMapping("/member/find/books")
+    public String findBooks(@AuthenticationPrincipal CustomUserDetails userDetails,
+                            Model model)
+    {
+        List<NoneBooksDto> res = memberService.getBooksByGu(userDetails.getMember().getId());
+        model.addAttribute("list",res);
+        return "member/rentPage";
     }
 }

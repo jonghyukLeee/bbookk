@@ -16,16 +16,6 @@
 <!-- JQuery-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <!-- JQuery-->
-
-    <script>
-        $(function ()
-        {
-            $('#idCheckBtn').click(function ()
-                {
-                    checkId();
-                })
-        })
-    </script>
 </head>
 <body>
     <div>
@@ -74,17 +64,18 @@
 </div>
 </body>
 <script>
-    function checkId()
+    $(document).on('click','#idCheckBtn',function()
     {
+        console.log("hi");
         var id = $("#loginId").val();
-        var url = 'http://localhost:8080/user/checkId/'.concat(id);
-        console.log(document.location.origin);
+        console.log(id);
         $.ajax({
-            url: url,
+            url:'/v1/check/id/',
             method: "GET",
-            dataType: 'json',
-            success: function(data)
+            data:{loginId:id},
+            success:function(data)
             {
+                console.log("start");
                 if(data.isDuplicate)
                 {
                     alert("중복된 아이디입니다.");
@@ -94,9 +85,10 @@
                     alert("사용 가능한 아이디입니다.");
                     document.getElementById('submitBtn').disabled = false;
                 }
+                console.log("done");
             }
         })
-    }
+    });
 
 </script>
 </html>
