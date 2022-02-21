@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +22,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final BookRepository bookRepository;
+    private final EntityManager em;
 
     @Transactional
     public void join(Member member)
@@ -34,7 +36,6 @@ public class MemberService {
         Member findMember = memberRepository.findByLoginId(member.getLoginId());
         findMember.modify(form);
         findMember.setPassword(form.getPassword());
-        //memberRepository.save(findMember);
     }
     @Transactional
     public void drop(Member member)
@@ -43,9 +44,9 @@ public class MemberService {
     }
 
     @Transactional
-    public void addBook(Member member, Book book)
+    public void addBook(Long id, Book book)
     {
-        Optional<Member> findMember = memberRepository.findById(member.getId());
+        Optional<Member> findMember = memberRepository.findById(id);
 
         findMember.ifPresent(book::setMember);
         bookRepository.save(book);

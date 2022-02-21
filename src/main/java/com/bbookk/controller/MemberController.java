@@ -108,8 +108,7 @@ public class MemberController {
                                    @RequestParam("isbn") String isbn)
     {
         Book book = new Book(img,title,author,publisher,isbn);
-        Member userDetailsMember = userDetails.getMember();
-        memberService.addBook(userDetailsMember,book);
+        memberService.addBook(userDetails.getMember().getId(),book);
         return "member/myPage/book/registerBookForm";
     }
 

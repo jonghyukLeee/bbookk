@@ -12,6 +12,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import java.util.List;
@@ -64,13 +65,11 @@ class UserTest {
     }
 
     @Test
+    @Transactional
     public void findMember()
     {
-        Address address = new Address("as","as","as");
-        Member u1 = new Member("u1","asd","123","010",address);
-        memberRepository.save(u1);
-
-        System.out.println(memberService.isMember("as","12"));
+        Optional<Member> findMember = memberRepository.findById(1L);
+        System.out.println(em.contains(findMember.get()));
     }
 
     @Test
@@ -98,22 +97,19 @@ class UserTest {
     }
 
     @Test
+    @Transactional
     public void addBook()
     {
-        Address address = new Address("as","as","as");
-        Member member = new Member("u1","asd","123","010",address);
-
-        em.persist(member);
+        Member admin = memberRepository.findById(1L).get();
         Book book = new Book("123","123","123","123","123");
-        book.setMember(member);
+        book.setMember(admin);
         em.persist(book);
-        memberService.addBook(member,book);
+        memberService.addBook(admin.getId(),book);
         em.flush();
-        em.clear();
-
-        Optional<Member> getMember = memberRepository.findById(member.getId());
-
-        System.out.println(getMember.get().getBooks().size());
+        List<Book> res = em.createQuery("select b from Book b", Book.class).getResultList();
+        for (Book re : res) {
+            System.out.println(re.getBookName()+re.getMember().getId());
+        }
 
     }
 
