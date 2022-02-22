@@ -1,16 +1,18 @@
 package com.bbookk.repository;
 
 import com.bbookk.entity.Book;
-import com.bbookk.entity.BookStatus;
+import com.bbookk.repository.dto.FindBooksDto;
 import com.bbookk.repository.dto.LibraryDto;
-import com.bbookk.repository.dto.NoneBooksDto;
+import com.bbookk.repository.dto.QFindBooksDto;
 import com.bbookk.repository.dto.QLibraryDto;
-import com.bbookk.repository.dto.QNoneBooksDto;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 
 import javax.persistence.EntityManager;
 import java.util.List;
-import java.util.Optional;
 
 import static com.bbookk.entity.QMember.member;
 import static com.bbookk.entity.QBook.book;
@@ -68,20 +70,33 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom{
     }
 
     @Override
-    public List<NoneBooksDto> findBooksByGu(String gu) {
-        return queryFactory
-                .select(new QNoneBooksDto(
+    public Page<FindBooksDto> findBooks(String gu, String query, Pageable pageable) {
+
+        //쿼리결과
+        List<FindBooksDto> results = queryFactory
+                .select(new QFindBooksDto(
                         book.imgSource,
                         book.bookName,
                         book.author,
                         book.publisher,
-                        member.name
+                        member.name,
+                        book.status
                 )).from(book)
                 .leftJoin(book.member, member)
                 .where(
                         member.address.gu.eq(gu),
-                        book.status.eq(BookStatus.NONE)
+                        book.bookName.contains(query)
                 )
                 .fetch();
+
+        //카운트
+        JPAQuery<Book> countQuery = queryFactory.selectFrom(book)
+                .leftJoin(book.member, member)
+                .where(
+                        member.address.gu.eq(gu),
+                        book.bookName.contains(query)
+                );
+        return PageableExecutionUtils.getPage(results,pageable, countQuery::fetchCount);
     }
+
 }

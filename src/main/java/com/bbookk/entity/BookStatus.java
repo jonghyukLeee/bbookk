@@ -9,11 +9,11 @@ public enum BookStatus {
         {
             case NONE:
             {
-                return "대기";
+                return "대여가능";
             }
             case REQUESTED:
             {
-                return "대여요청";
+                return "대여요청중";
             }
             case RENTED:
             {
@@ -21,7 +21,7 @@ public enum BookStatus {
             }
             default:
             {
-                return "반납완료";
+                return "반납대기";
             }
         }
     }

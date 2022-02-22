@@ -6,7 +6,7 @@ import com.bbookk.entity.Member;
 import com.bbookk.repository.BookRepository;
 import com.bbookk.repository.MemberRepository;
 import com.bbookk.repository.dto.LibraryDto;
-import com.bbookk.repository.dto.NoneBooksDto;
+import com.bbookk.repository.dto.FindBooksDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,8 +83,4 @@ public class MemberService {
         bookRepository.delete(memberRepository.findMemberBook(id,bookName));
     }
 
-    public List<NoneBooksDto> getBooksByGu(Long id) {
-        Optional<Member> findMember = memberRepository.findById(id);
-        return memberRepository.findBooksByGu(findMember.get().getAddress().getGu());
-    }
 }

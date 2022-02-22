@@ -1,16 +1,22 @@
 package com.bbookk.api;
 
 import com.bbookk.auth.CustomUserDetails;
+import com.bbookk.repository.MemberRepository;
+import com.bbookk.repository.dto.FindBooksDto;
 import com.bbookk.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.servlet.ModelAndView;
 import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
@@ -21,6 +27,7 @@ import java.util.Map;
 public class MemberApiController {
 
     private final MemberService memberService;
+    private final MemberRepository memberRepository;
 
     @Value("${apis.kakao.restApiKey}") String key;
     @GetMapping("/v1/search/book")
@@ -46,6 +53,14 @@ public class MemberApiController {
         Map<String,Boolean> res = new HashMap<>();
         res.put("response",memberService.isDuplicatedBook(userDetails.getMember().getId(), bookName));
         return res;
+    }
+
+    @GetMapping("/v1/find/books")
+    public Page<FindBooksDto> findBooks(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                        @RequestParam("query") String query,
+                                        Pageable pageable)
+    {
+        return memberRepository.findBooks(userDetails.getMember().getAddress().getGu(),query,pageable);
     }
 
 }

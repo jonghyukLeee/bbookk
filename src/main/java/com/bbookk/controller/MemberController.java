@@ -5,7 +5,7 @@ import com.bbookk.controller.form.ModifyForm;
 import com.bbookk.entity.Book;
 import com.bbookk.entity.Member;
 import com.bbookk.repository.dto.LibraryDto;
-import com.bbookk.repository.dto.NoneBooksDto;
+import com.bbookk.repository.dto.FindBooksDto;
 import com.bbookk.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -111,7 +111,6 @@ public class MemberController {
         memberService.addBook(userDetails.getMember().getId(),book);
         return "member/myPage/book/registerBookForm";
     }
-
     //나의 서재
     @GetMapping("/member/myLibrary")
     public String myLibrary(@AuthenticationPrincipal CustomUserDetails userDetails,Model model)
@@ -129,12 +128,18 @@ public class MemberController {
         return "redirect:/member/myLibrary";
     }
 
-    @GetMapping("/member/find/books")
-    public String findBooks(@AuthenticationPrincipal CustomUserDetails userDetails,
-                            Model model)
+    //대여하기
+    @GetMapping("/member/rentPage")
+    public String rentPage()
     {
-        List<NoneBooksDto> res = memberService.getBooksByGu(userDetails.getMember().getId());
-        model.addAttribute("list",res);
         return "member/rentPage";
     }
+//    @GetMapping("/member/find/books")
+//    public String findBooks(@AuthenticationPrincipal CustomUserDetails userDetails,
+//                            Model model)
+//    {
+//        List<FindBooksDto> res = memberService.getBooksByGu(userDetails.getMember().getId());
+//        model.addAttribute("list",res);
+//        return "member/rentPage";
+//    }
 }

@@ -1,5 +1,6 @@
 package com.bbookk;
 
+import com.bbookk.entity.Address;
 import com.bbookk.entity.Book;
 import com.bbookk.entity.BookStatus;
 import com.bbookk.entity.Member;
@@ -36,7 +37,8 @@ public class InitDb {
 
         public void dbInit1() {
             String password = encoder.encode("123");
-            Member admin = new Member("admin","admin",password,"010",null);
+            Address address = new Address("인천","남동구","만수동");
+            Member admin = new Member("admin","admin",password,"010",address);
             admin.setAdmin();
             em.persist(admin);
 

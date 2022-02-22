@@ -2,14 +2,15 @@ package com.bbookk.repository;
 
 import com.bbookk.entity.Book;
 import com.bbookk.repository.dto.LibraryDto;
-import com.bbookk.repository.dto.NoneBooksDto;
+import com.bbookk.repository.dto.FindBooksDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface MemberRepositoryCustom{
     boolean isDuplicateBook(Long id, String bookName);
     List<LibraryDto> getLibrary(Long id);
     Book findMemberBook(Long id, String bookName);
-    List<NoneBooksDto> findBooksByGu(String gu);
+    Page<FindBooksDto> findBooks(String gu, String query, Pageable pageable);
 }
