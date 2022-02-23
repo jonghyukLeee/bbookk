@@ -20,27 +20,33 @@ public class Book {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @OneToOne
+    @JoinColumn(name = "order_id")
+    private Orders order;
+
     private String imgSource;
     private String bookName;
     private String author;
     private String publisher;
     private String isbn;
 
-    @Enumerated(EnumType.STRING)
-    private BookStatus status;
-
     public void setMember(Member member)
     {
         this.member = member;
         member.getBooks().add(this);
     }
+
+    public String getStatus()
+    {
+        return this.order == null ? "대여가능" : "대여불가";
+    }
+
     public Book(String imgSource, String bookName, String author, String publisher, String isbn) {
         this.imgSource = imgSource;
         this.bookName = bookName;
         this.author = author;
         this.publisher = publisher;
         this.isbn = isbn;
-        this.status = BookStatus.NONE;
     }
 
 }

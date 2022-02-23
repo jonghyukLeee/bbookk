@@ -2,6 +2,7 @@ package com.bbookk.api;
 
 import com.bbookk.auth.CustomUserDetails;
 import com.bbookk.repository.MemberRepository;
+import com.bbookk.repository.dto.BookDetailsDto;
 import com.bbookk.repository.dto.FindBooksDto;
 import com.bbookk.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -11,12 +12,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.servlet.ModelAndView;
 import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
@@ -60,14 +59,23 @@ public class MemberApiController {
                                         @RequestParam("query") String query,
                                         Pageable pageable)
     {
-        System.out.println("check)"+pageable.getPageNumber()+" "+pageable.getPageSize());
         return memberRepository.findBooks(userDetails.getMember().getAddress().getGu(),query,pageable);
     }
 
-//    @GetMapping("/v1/rent/book")
-//    public Map<String,Boolean> rentRequest(@RequestParam("bookName")String bookName,
-//                                           @RequestParam("memberName")String memberName)
+    @GetMapping("/v1/details/book")
+    public BookDetailsDto bookDetails(@RequestParam("memberId") Long id,
+                                      @RequestParam("bookName") String bookName)
+    {
+        return memberRepository.getBookDetails(id,bookName);
+    }
+
+
+//    @GetMapping("/v1/borrow/book")
+//    public Map<String,Boolean> rentRequest(@AuthenticationPrincipal CustomUserDetails userDetails,
+//                                           @RequestParam("bookName")String bookName,
+//                                           @RequestParam("lenderName")String lenderName)
 //    {
+//        Long borrowerId = userDetails.getMember().getId();
 //
 //    }
 

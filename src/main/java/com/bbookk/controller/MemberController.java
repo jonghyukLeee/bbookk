@@ -129,17 +129,9 @@ public class MemberController {
     }
 
     //대여하기
-    @GetMapping("/member/rentPage")
+    @GetMapping("/member/borrowPage")
     public String rentPage()
     {
-        return "member/rentPage";
+        return "member/borrowPage";
     }
-//    @GetMapping("/member/find/books")
-//    public String findBooks(@AuthenticationPrincipal CustomUserDetails userDetails,
-//                            Model model)
-//    {
-//        List<FindBooksDto> res = memberService.getBooksByGu(userDetails.getMember().getId());
-//        model.addAttribute("list",res);
-//        return "member/rentPage";
-//    }
 }

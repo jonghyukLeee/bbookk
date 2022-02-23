@@ -2,7 +2,6 @@ package com.bbookk;
 
 import com.bbookk.entity.Address;
 import com.bbookk.entity.Book;
-import com.bbookk.entity.BookStatus;
 import com.bbookk.entity.Member;
 import com.bbookk.repository.BookRepository;
 import com.bbookk.repository.MemberRepository;

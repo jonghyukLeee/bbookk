@@ -1,10 +1,10 @@
 package com.bbookk.repository;
 
 import com.bbookk.entity.Book;
-import com.bbookk.repository.dto.FindBooksDto;
-import com.bbookk.repository.dto.LibraryDto;
-import com.bbookk.repository.dto.QFindBooksDto;
-import com.bbookk.repository.dto.QLibraryDto;
+import com.bbookk.entity.Member;
+import com.bbookk.entity.QBook;
+import com.bbookk.entity.QMember;
+import com.bbookk.repository.dto.*;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
@@ -47,8 +47,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom{
                         book.bookName,
                         book.author,
                         book.publisher,
-                        book.isbn,
-                        book.status
+                        book.isbn
                 ))
                 .from(book)
                 .where(
@@ -75,12 +74,12 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom{
         //쿼리결과
         List<FindBooksDto> results = queryFactory
                 .select(new QFindBooksDto(
+                        member.id,
                         book.imgSource,
                         book.bookName,
                         book.author,
                         book.publisher,
-                        member.name,
-                        book.status
+                        member.name
                 )).from(book)
                 .leftJoin(book.member, member)
                 .where(
@@ -97,6 +96,24 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom{
                         book.bookName.contains(query)
                 );
         return PageableExecutionUtils.getPage(results,pageable, countQuery::fetchCount);
+    }
+
+    @Override
+    public BookDetailsDto getBookDetails(Long id, String bookName) {
+        Book findBook = queryFactory.selectFrom(book)
+                .leftJoin(book.member, member)
+                .where(
+                        member.id.eq(id),
+                        book.bookName.eq(bookName)
+                ).fetchOne();
+
+        Member findMember = queryFactory.selectFrom(QMember.member)
+                .where(QMember.member.id.eq(id))
+                .fetchOne();
+
+        return new BookDetailsDto(findBook.getImgSource(),findBook.getBookName(),
+                findMember.getName(),findBook.getStatus());
+
     }
 
 }
