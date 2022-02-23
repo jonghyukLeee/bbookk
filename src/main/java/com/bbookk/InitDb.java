@@ -36,16 +36,23 @@ public class InitDb {
         private final BCryptPasswordEncoder encoder;
 
         public void dbInit1() {
-            String password = encoder.encode("123");
             Address address = new Address("인천","남동구","만수동");
-            Member admin = new Member("admin","admin",password,"010",address);
+            Member admin = new Member("admin","admin","123","010",address);
             admin.setAdmin();
+            admin.setPassword(admin.getPassword());
             em.persist(admin);
 
-            Book book = new Book("https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5416922%3Ftimestamp%3D20220218170906"
-            ,"달러구트 꿈 백화점","이미예","팩토리나인","1165341905 9791165341909");
-            book.setMember(admin);
-            bookRepository.save(book);
+//            Book book = new Book("https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5416922%3Ftimestamp%3D20220218170906"
+//            ,"달러구트 꿈 백화점","이미예","팩토리나인","1165341905 9791165341909");
+//            book.setMember(admin);
+//            bookRepository.save(book);
+            for(int i = 1; i <= 100; ++i)
+            {
+                Book b = new Book("img","book"+i,"author",
+                        "publisher","isbn");
+                b.setMember(admin);
+                em.persist(b);
+            }
         }
     }
 }

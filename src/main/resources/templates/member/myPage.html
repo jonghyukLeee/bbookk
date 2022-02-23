@@ -15,28 +15,30 @@
 
 <div th:replace="fragments/header :: header"></div>
 </head>
-<body class="d-grid gap-3 col-4 mx-auto">
+<body>
+  <div class="d-grid gap-3 col-4 mx-auto">
     <div th:each="entry : ${cashInfo}">
-        Cash 
-        <span th:text="${entry.value}">point</span>
+      Cash
+      <span th:text="${entry.value}">point</span>
     </div>
-
+  
     <div>
-        도서관리
-        <div class="d-grid gap-2 col-4">
-            <button class="btn-primary btn-sm" onclick="location.href='/member/registerBookPage'">책 등록</button>
-            <button class="btn-primary btn-sm" onclick="location.href='/member/myLibrary'">나의 서재</button>
-            <button class="btn-primary btn-sm">대여 현황</button>
-        </div>
+      도서관리
+      <div class="d-grid gap-2 col-4">
+        <button class="btn-primary btn-sm" onclick="location.href='/member/registerBookPage'">책 등록</button>
+        <button class="btn-primary btn-sm" onclick="location.href='/member/myLibrary'">나의 서재</button>
+        <button class="btn-primary btn-sm">대여 현황</button>
+      </div>
     </div>
     <div>
-        내정보
-        <div class="d-grid gap-2 col-4">
-            <button class="btn-primary btn-sm">나의 평가</button>
-            <button class="btn-primary btn-sm" onclick="location.href='/member/modify'">개인정보 수정</button>
-            <button class="btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#dropModal">회원 탈퇴</button>
-        </div>
+      내정보
+      <div class="d-grid gap-2 col-4">
+        <button class="btn-primary btn-sm">나의 평가</button>
+        <button class="btn-primary btn-sm" onclick="location.href='/member/modify'">개인정보 수정</button>
+        <button class="btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#dropModal">회원 탈퇴</button>
+      </div>
     </div>
+  </div>
 </body>
 <!-- Modal -->
 <div class="modal fade" id="dropModal" tabindex="-1" aria-labelledby="label" aria-hidden="true">

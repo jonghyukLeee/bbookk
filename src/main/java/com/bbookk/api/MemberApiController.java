@@ -60,7 +60,15 @@ public class MemberApiController {
                                         @RequestParam("query") String query,
                                         Pageable pageable)
     {
+        System.out.println("check)"+pageable.getPageNumber()+" "+pageable.getPageSize());
         return memberRepository.findBooks(userDetails.getMember().getAddress().getGu(),query,pageable);
     }
+
+//    @GetMapping("/v1/rent/book")
+//    public Map<String,Boolean> rentRequest(@RequestParam("bookName")String bookName,
+//                                           @RequestParam("memberName")String memberName)
+//    {
+//
+//    }
 
 }

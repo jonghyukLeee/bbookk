@@ -22,6 +22,7 @@ public class Orders {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
+    //도서 제공자와 대여자를 구분
     @Enumerated(EnumType.STRING)
     private MemberType memberType;
 }
