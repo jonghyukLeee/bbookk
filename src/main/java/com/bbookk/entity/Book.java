@@ -36,6 +36,11 @@ public class Book {
         member.getBooks().add(this);
     }
 
+    public void setOrder(Orders order)
+    {
+        this.order = order;
+    }
+
     public String getStatus()
     {
         return this.order == null ? "대여가능" : "대여불가";
@@ -48,5 +53,6 @@ public class Book {
         this.publisher = publisher;
         this.isbn = isbn;
     }
+
 
 }

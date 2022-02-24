@@ -1,6 +1,7 @@
 package com.bbookk.api;
 
 import com.bbookk.auth.CustomUserDetails;
+import com.bbookk.entity.Book;
 import com.bbookk.repository.MemberRepository;
 import com.bbookk.repository.dto.BookDetailsDto;
 import com.bbookk.repository.dto.FindBooksDto;
@@ -70,13 +71,17 @@ public class MemberApiController {
     }
 
 
-//    @GetMapping("/v1/borrow/book")
-//    public Map<String,Boolean> rentRequest(@AuthenticationPrincipal CustomUserDetails userDetails,
-//                                           @RequestParam("bookName")String bookName,
-//                                           @RequestParam("lenderName")String lenderName)
-//    {
-//        Long borrowerId = userDetails.getMember().getId();
-//
-//    }
+    @GetMapping("/v1/borrow/book")
+    public Map<String,Boolean> rentRequest(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                           @RequestParam("memberId") Long id,
+                                           @RequestParam("bookName")String bookName)
+    {
+        Long borrowerId = userDetails.getMember().getId();
+        Book findBook = memberRepository.findMemberBook(id, bookName);
+        Map<String,Boolean> res = new HashMap<>();
+        res.put("res",memberService.createOrder(findBook, borrowerId));
+        System.out.println("result="+res);
+        return res;
+    }
 
 }

@@ -3,8 +3,10 @@ package com.bbookk.service;
 import com.bbookk.controller.form.ModifyForm;
 import com.bbookk.entity.Book;
 import com.bbookk.entity.Member;
+import com.bbookk.entity.Orders;
 import com.bbookk.repository.BookRepository;
 import com.bbookk.repository.MemberRepository;
+import com.bbookk.repository.OrderRepository;
 import com.bbookk.repository.dto.LibraryDto;
 import com.bbookk.repository.dto.FindBooksDto;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final BookRepository bookRepository;
+    private final OrderRepository orderRepository;
     private final EntityManager em;
 
     @Transactional
@@ -83,4 +86,15 @@ public class MemberService {
         bookRepository.delete(memberRepository.findMemberBook(id,bookName));
     }
 
+    @Transactional
+    public boolean createOrder(Book findBook, Long borrowerId) {
+        if(findBook.getOrder() == null)
+        {
+            Orders order = new Orders(borrowerId);
+            orderRepository.save(order);
+            findBook.setOrder(order);
+            return true;
+        }
+        return false;
+    }
 }

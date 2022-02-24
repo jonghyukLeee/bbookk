@@ -1,12 +1,15 @@
 package com.bbookk.entity;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Orders {
 
     @Id @GeneratedValue
@@ -23,5 +26,11 @@ public class Orders {
     public String getsStatusToString()
     {
         return status == OrderStatus.REQUESTED ? "대여요청" : "대여중";
+    }
+
+    public Orders(Long borrower_id) {
+        this.borrower_id = borrower_id;
+        this.orderTime = LocalDateTime.now();
+        this.status = OrderStatus.REQUESTED;
     }
 }
