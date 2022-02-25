@@ -2,6 +2,7 @@ package com.bbookk.api;
 
 import com.bbookk.auth.CustomUserDetails;
 import com.bbookk.entity.Book;
+import com.bbookk.repository.BookRepositoryImpl;
 import com.bbookk.repository.MemberRepository;
 import com.bbookk.repository.dto.BookDetailsDto;
 import com.bbookk.repository.dto.FindBooksDto;
@@ -28,6 +29,7 @@ public class MemberApiController {
 
     private final MemberService memberService;
     private final MemberRepository memberRepository;
+    private final BookRepositoryImpl bookRepository;
 
     @Value("${apis.kakao.restApiKey}") String key;
     @GetMapping("/v1/search/book")
@@ -60,14 +62,14 @@ public class MemberApiController {
                                         @RequestParam("query") String query,
                                         Pageable pageable)
     {
-        return memberRepository.findBooks(userDetails.getMember().getAddress().getGu(),query,pageable);
+        return bookRepository.findBooks(userDetails.getMember().getAddress().getGu(),query,pageable);
     }
 
     @GetMapping("/v1/details/book")
     public BookDetailsDto bookDetails(@RequestParam("memberId") Long id,
                                       @RequestParam("bookName") String bookName)
     {
-        return memberRepository.getBookDetails(id,bookName);
+        return bookRepository.getBookDetails(id,bookName);
     }
 
 
@@ -77,7 +79,7 @@ public class MemberApiController {
                                            @RequestParam("bookName")String bookName)
     {
         Long borrowerId = userDetails.getMember().getId();
-        Book findBook = memberRepository.findMemberBook(id, bookName);
+        Book findBook = bookRepository.findMemberBook(id, bookName);
         Map<String,Boolean> res = new HashMap<>();
         res.put("res",memberService.createOrder(findBook, borrowerId));
         System.out.println("result="+res);

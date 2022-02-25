@@ -78,12 +78,12 @@ public class MemberService {
 
     public List<LibraryDto> getLibrary(Member member)
     {
-        return memberRepository.getLibrary(member.getId());
+        return bookRepository.getLibrary(member.getId());
     }
 
     @Transactional
     public void deleteBook(Long id, String bookName) {
-        bookRepository.delete(memberRepository.findMemberBook(id,bookName));
+        bookRepository.delete(bookRepository.findMemberBook(id,bookName));
     }
 
     @Transactional
