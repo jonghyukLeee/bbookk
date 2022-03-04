@@ -28,7 +28,6 @@ import java.util.Map;
 public class MemberApiController {
 
     private final MemberService memberService;
-    private final MemberRepository memberRepository;
     private final BookRepositoryImpl bookRepository;
 
     @Value("${apis.kakao.restApiKey}") String key;
@@ -74,15 +73,23 @@ public class MemberApiController {
 
 
     @GetMapping("/v1/borrow/book")
-    public Map<String,Boolean> rentRequest(@AuthenticationPrincipal CustomUserDetails userDetails,
+    public Map<String,String> rentRequest(@AuthenticationPrincipal CustomUserDetails userDetails,
                                            @RequestParam("memberId") Long id,
                                            @RequestParam("bookName")String bookName)
     {
         Long borrowerId = userDetails.getMember().getId();
-        Book findBook = bookRepository.findMemberBook(id, bookName);
-        Map<String,Boolean> res = new HashMap<>();
-        res.put("res",memberService.createOrder(findBook, borrowerId));
-        System.out.println("result="+res);
+        Map<String,String> res = new HashMap<>();
+        System.out.println("borrowerID = "+borrowerId+", lenderId = "+id);
+        if(borrowerId.equals(id)) //자신의 책을 선택한경우
+        {
+            System.out.println("sameId");
+            res.put("res","sameId");
+        }
+        else
+        {
+            Book findBook = bookRepository.findMemberBook(id, bookName);
+            res.put("res",memberService.createOrder(findBook, borrowerId));
+        }
         return res;
     }
 

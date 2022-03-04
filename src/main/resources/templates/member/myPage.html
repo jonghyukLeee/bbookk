@@ -17,9 +17,16 @@
 </head>
 <body>
   <div class="d-grid gap-3 col-4 mx-auto">
-    <div th:each="entry : ${cashInfo}">
-      Cash
-      <span th:text="${entry.value}">point</span>
+    <div th:each="response : ${res}">
+      <div>
+        <span class="fs-5" th:text="${res.memberName}"> </span>
+        &nbsp;님
+      </div>
+      <div>
+        <span>Cash</span>
+        <span th:text="${res.cash}"></span>
+        &nbsp;Point
+      </div>
     </div>
   
     <div>

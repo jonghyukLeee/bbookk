@@ -2,6 +2,7 @@ package com.bbookk.api;
 
 import com.bbookk.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,12 +17,23 @@ public class UserApiController {
 
     private final MemberService memberService;
 
-    @GetMapping("/v1/check/id")
-    public Map<String,Object> isDuplicateId(@RequestParam("longinId") String loginId)
+    /**
+     * 중복체크
+     */
+
+    @GetMapping("/user/v1/loginId")
+    public ResponseEntity<Boolean> isDuplicateLoginId(@RequestParam String loginId)
     {
-        System.out.println("loginId="+loginId);
-        Map<String,Object> res = new HashMap<>();
-        res.put("isDuplicate", memberService.isDuplicateId(loginId));
+        System.out.println("loginId = "+loginId);
+        return ResponseEntity.ok().body(memberService.isDuplicatedLoginId(loginId));
+    }
+
+    @GetMapping("/user/v1/nickname")
+    public Map<String,Boolean> isDuplicateNickname(@RequestParam String nickname)
+    {
+        System.out.println("nickName = " + nickname);
+        Map<String,Boolean> res = new HashMap<>();
+        res.put("isDuplicate", memberService.isDuplicatedNickname(nickname));
         return res;
     }
 

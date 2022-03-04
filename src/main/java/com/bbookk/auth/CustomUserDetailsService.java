@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 /**
  * config에서 .loginProcessingUrl("/user/login")
- * 로 세팅을 해두었기 때문에, 해당 url 요청이 오게되면
+ * 로 세팅을 해두었기 때문에, 해당 url 요청이 오게되면 (controller에서 post함수 안만들어도됨)
  * 현재 서비스에서 UserDetailsService 타입으로, loadUserByUsername 함수가 실행된다.
  */
 @Service
@@ -24,6 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
         Member findMember = memberRepository.findByLoginId(loginId);
+        System.out.println(findMember);
         if(findMember == null) throw new UsernameNotFoundException(loginId);
         return new CustomUserDetails(findMember);
         }

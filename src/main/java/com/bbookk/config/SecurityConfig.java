@@ -30,16 +30,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                //user url은 모두허용
-                .antMatchers("/user/**").permitAll()
+                //member, admin 권한필요
+                .antMatchers("/member/**").access("hasAnyRole('ROLE_ADMIN','ROLE_MEMBER')")
                 .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
-                //이외에는 권한 필요
-                .anyRequest().authenticated()
+                //이외에는 허용
+                .anyRequest().permitAll()
                 .and()
 
                 .formLogin()
-                .loginPage("/user/loginPage") // 이 경로의 로그인 요청을 필터링
-                .loginProcessingUrl("/user/login")
+                .loginPage("/loginForm") // 이 경로의 로그인 요청을 필터링
+                .loginProcessingUrl("/login")
                 .usernameParameter("loginId")
                 .defaultSuccessUrl("/")
                 //.successForwardUrl("/member/main")

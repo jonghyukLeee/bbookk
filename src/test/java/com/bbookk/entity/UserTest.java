@@ -35,33 +35,17 @@ class UserTest {
     MemberService memberService;
 
     @Test
-    @Transactional
-    public void saveTest()
-    {
-        Address address = new Address("as","as","as");
-        Member u1 = new Member("u1","asd","123","010",address);
-        Member u2 = new Member("u2","asdf","123","010",address);
-
-        memberRepository.save(u1);
-        memberRepository.save(u2);
-
-        List<Member> res = em.createQuery("select u from Member u", Member.class).getResultList();
-
-    }
-    @Test
-    @Transactional
     public void findByLoginId()
     {
-        Address address = new Address("as","as","as");
-        Member u1 = new Member("u1","asd","123","010",address);
-        Member u2 = new Member("u2","asdf","123","010",address);
+        Boolean res = memberService.isDuplicatedLoginId("cjfwnsa");
+        System.out.println(res);
+    }
 
-        memberRepository.save(u1);
-        memberRepository.save(u2);
-
-        System.out.println("fst"+ memberService.isDuplicateId("asd"));
-        System.out.println("sec"+ memberService.isDuplicateId("asdd"));
-        System.out.println(ResponseEntity.ok(true));
+    @Test
+    public void findByNickname()
+    {
+        Boolean res = memberService.isDuplicatedNickname("강훈");
+        System.out.println(res);
     }
 
     @Test
@@ -72,29 +56,7 @@ class UserTest {
         System.out.println(em.contains(findMember.get()));
     }
 
-    @Test
-    public void encodeTest()
-    {
-        Address address = new Address("as","as","as");
-        Member member = new Member("u1","asd","123","010",address);
 
-        member.setPassword(member.getPassword());
-        memberRepository.save(member);
-
-        List<Member> res = em.createQuery("select m from Member m", Member.class).getResultList();
-
-        System.out.println(res);
-    }
-    
-    @Test
-    public void addCash()
-    {
-        Address address = new Address("as","as","as");
-        Member member = new Member("u1","asd","123","010",address);
-
-        memberRepository.save(member);
-        System.out.println("check"+em.contains(member));
-    }
 
     @Test
     @Transactional
@@ -113,32 +75,5 @@ class UserTest {
 
     }
 
-    @Test
-    @Transactional
-    public void deleteBook()
-    {
-        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
-        Address address = new Address("as","as","as");
-        Member member = new Member("u1","asd","123","010",address);
 
-        em.persist(member);
-
-        Book book1 = new Book("123","123","123","123","123");
-        Book book2 = new Book("123","456","123","123","123");
-
-        em.persist(book1);
-        em.persist(book2);
-
-        book1.setMember(member);
-        book2.setMember(member);
-
-        em.flush();
-        em.clear();
-
-        List<Book> res = em.createQuery("select b from Book b", Book.class).getResultList();
-        for (Book re : res) {
-            System.out.println(re.getBookName());
-        }
-
-    }
 }

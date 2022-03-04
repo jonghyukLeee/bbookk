@@ -1,6 +1,7 @@
 package com.bbookk.controller;
 
 import com.bbookk.auth.CustomUserDetails;
+import com.bbookk.controller.dto.MypageDto;
 import com.bbookk.controller.form.ModifyForm;
 import com.bbookk.entity.Book;
 import com.bbookk.entity.Member;
@@ -39,9 +40,8 @@ public class MemberController {
     {
         //현재 멤버정보
         Member member = userDetails.getMember();
-        Map<Long,Integer> cashInfo = new HashMap<>(); // 아이디,캐시잔액
-        cashInfo.put(member.getId(),member.getCash());
-        model.addAttribute("cashInfo",cashInfo);
+        MypageDto res = new MypageDto(member.getName(),member.getCash());
+        model.addAttribute("res",res);
         return "member/myPage";
     }
 

@@ -23,27 +23,29 @@ public class UserController {
     @GetMapping("/")
     public String home()
     {
-        return "member/main";
+        return "index";
     }
-    @GetMapping("/user/loginPage")
-    public String loginPage()
+
+    @GetMapping("/loginForm")
+    public String login()
     {
-        return "user/loginPage";
+        return "loginForm";
     }
-    @GetMapping("/user/joinMember")
+
+    @GetMapping("/join")
     public String createForm(Model model)
     {
         model.addAttribute("memberForm",new MemberForm());
         return "user/createMemberForm";
     }
 
-    @PostMapping("/user/joinMember")
+    @PostMapping("/join")
     public String joinUser(@Valid MemberForm form)
     {
         Address address = new Address(form.getSi(),form.getGu(),form.getDong());
         String encodedPwd = encoder.encode(form.getPassword());
 
-        Member member = new Member(form.getName(),form.getLoginId(),encodedPwd,form.getPhone(),address);
+        Member member = new Member(form.getName(),form.getLoginId(),form.getNickname(),encodedPwd,form.getPhone(),address);
         memberService.join(member);
 
         return "redirect:/";

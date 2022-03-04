@@ -25,7 +25,6 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final BookRepository bookRepository;
     private final OrderRepository orderRepository;
-    private final EntityManager em;
 
     @Transactional
     public void join(Member member)
@@ -36,10 +35,26 @@ public class MemberService {
     @Transactional
     public void modify(Member member, ModifyForm form)
     {
-        Member findMember = memberRepository.findByLoginId(member.getLoginId());
+        Member findMember = memberRepository.findById(member.getId()).get();
         findMember.modify(form);
         findMember.setPassword(form.getPassword());
     }
+
+    //중복확인
+    public boolean isDuplicatedLoginId(String loginId)
+    {
+        return memberRepository.findByLoginId(loginId) != null;
+    }
+
+    public boolean isDuplicatedNickname(String nickname) {
+        return memberRepository.findByNickname(nickname) != null;
+    }
+
+    public boolean isDuplicatedBook(Long id,String bookName)
+    {
+        return memberRepository.isDuplicateBook(id,bookName);
+    }
+
     @Transactional
     public void drop(Member member)
     {
@@ -55,15 +70,7 @@ public class MemberService {
         bookRepository.save(book);
     }
 
-    public boolean isDuplicateId(String loginId)
-    {
-        return memberRepository.findByLoginId(loginId) != null;
-    }
 
-    public boolean isDuplicatedBook(Long id,String bookName)
-    {
-        return memberRepository.isDuplicateBook(id,bookName);
-    }
 
     public boolean isMember(String loginId, String password) {
         return memberRepository.existsByLoginIdAndPassword(loginId,password);
@@ -87,14 +94,16 @@ public class MemberService {
     }
 
     @Transactional
-    public boolean createOrder(Book findBook, Long borrowerId) {
+    public String createOrder(Book findBook, Long borrowerId) {
         if(findBook.getOrder() == null)
         {
             Orders order = new Orders(borrowerId);
             orderRepository.save(order);
             findBook.setOrder(order);
-            return true;
+            return "success";
         }
-        return false;
+        return "fail";
     }
+
+
 }

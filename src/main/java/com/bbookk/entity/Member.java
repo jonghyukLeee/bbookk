@@ -20,15 +20,17 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
     private String name;
+    private String nickname;
     private String loginId;
     private String password;
 
     @Size(max = 11)
     private String phone;
 
-    public Member(String name, String loginId, String password, String phone, Address address) {
+    public Member(String name, String loginId,String nickname, String password, String phone, Address address) {
         this.name = name;
         this.loginId = loginId;
+        this.nickname = nickname;
         this.password = password;
         this.phone = phone;
         this.address = address;
