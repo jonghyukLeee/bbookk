@@ -23,26 +23,23 @@ import java.util.*;
 public class MemberController {
     private final MemberService memberService;
 
-    @GetMapping("/member/main")
-    public String main()
-    {
-        return "member/main";
-    }
+    /**
+     * admin 페이지
+     */
+//    @GetMapping("/admin")
+//    public String admin()
+//    {
+//        return "admin";
+//    }
 
-    @GetMapping("/admin")
-    public String admin()
-    {
-        return "member/admin";
-    }
-
-    @GetMapping("/member/myPage")
+    @GetMapping("/myPage")
     public String myPage(@AuthenticationPrincipal CustomUserDetails userDetails, Model model)
     {
         //현재 멤버정보
         Member member = userDetails.getMember();
         MypageDto res = new MypageDto(member.getName(),member.getCash());
         model.addAttribute("res",res);
-        return "member/myPage";
+        return "myPage";
     }
 
     // 충전기능 삭제
@@ -65,14 +62,14 @@ public class MemberController {
     /**
      * 개인정보 수정
      */
-    @GetMapping("/member/modify")
+    @GetMapping("/modify")
     public String modifyPage(Model model)
     {
         model.addAttribute("modifyForm",new ModifyForm());
-        return "member/myPage/info/modifyMemberForm";
+        return "modify";
     }
 
-    @PostMapping("/member/modify")
+    @PostMapping("/modify")
     public String modify(@AuthenticationPrincipal CustomUserDetails userDetails,ModifyForm form)
     {
         memberService.modify(userDetails.getMember(),form);
@@ -82,7 +79,7 @@ public class MemberController {
     /**
      * 회원탈퇴
      */
-    @GetMapping("/member/drop")
+    @GetMapping("/drop")
     public String drop(@AuthenticationPrincipal CustomUserDetails userDetails)
     {
         memberService.drop(userDetails.getMember());

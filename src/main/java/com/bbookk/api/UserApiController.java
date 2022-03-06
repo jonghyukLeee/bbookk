@@ -24,17 +24,13 @@ public class UserApiController {
     @GetMapping("/user/v1/loginId")
     public ResponseEntity<Boolean> isDuplicateLoginId(@RequestParam String loginId)
     {
-        System.out.println("loginId = "+loginId);
         return ResponseEntity.ok().body(memberService.isDuplicatedLoginId(loginId));
     }
 
     @GetMapping("/user/v1/nickname")
-    public Map<String,Boolean> isDuplicateNickname(@RequestParam String nickname)
+    public ResponseEntity<Boolean> isDuplicateNickname(@RequestParam String nickname)
     {
-        System.out.println("nickName = " + nickname);
-        Map<String,Boolean> res = new HashMap<>();
-        res.put("isDuplicate", memberService.isDuplicatedNickname(nickname));
-        return res;
+        return ResponseEntity.ok().body(memberService.isDuplicatedNickname(nickname));
     }
 
 }

@@ -17,6 +17,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/js/**",
             "/img/**",
             "/favicon.ico",
+            "/vendor/**",
+            "/static/**",
             "/error"
     };
 
@@ -30,11 +32,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                //member, admin 권한필요
-                .antMatchers("/member/**").access("hasAnyRole('ROLE_ADMIN','ROLE_MEMBER')")
+                //admin 권한설정
+//                .antMatchers("/member/**").access("hasAnyRole('ROLE_ADMIN','ROLE_MEMBER')")
                 .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
-                //이외에는 허용
-                .anyRequest().permitAll()
+                //user경로는 허용 (회원가입, 로그인 등)
+                .antMatchers("/user/**").permitAll()
+                .anyRequest().authenticated()
                 .and()
 
                 .formLogin()
@@ -49,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .logout()
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/user/loginPage");
+                .logoutSuccessUrl("/");
 
                 //.invalidateHttpSession(true)
     }

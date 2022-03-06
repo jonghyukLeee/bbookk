@@ -1,10 +1,12 @@
 package com.bbookk.controller;
 
+import com.bbookk.auth.CustomUserDetails;
 import com.bbookk.controller.form.MemberForm;
 import com.bbookk.entity.Address;
 import com.bbookk.entity.Member;
 import com.bbookk.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,8 +23,10 @@ public class UserController {
     private final BCryptPasswordEncoder encoder;
 
     @GetMapping("/")
-    public String home()
+    public String home(@AuthenticationPrincipal CustomUserDetails userDetails,Model model)
     {
+        Member curMember = userDetails.getMember();
+        model.addAttribute("name",curMember.getName());
         return "index";
     }
 
@@ -32,14 +36,14 @@ public class UserController {
         return "loginForm";
     }
 
-    @GetMapping("/join")
+    @GetMapping("/user/join")
     public String createForm(Model model)
     {
         model.addAttribute("memberForm",new MemberForm());
-        return "user/createMemberForm";
+        return "/register";
     }
 
-    @PostMapping("/join")
+    @PostMapping("/user/join")
     public String joinUser(@Valid MemberForm form)
     {
         Address address = new Address(form.getSi(),form.getGu(),form.getDong());

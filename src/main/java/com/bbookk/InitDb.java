@@ -51,13 +51,13 @@ public class InitDb {
 //            ,"달러구트 꿈 백화점","이미예","팩토리나인","1165341905 9791165341909");
 //            book.setMember(admin);
 //            bookRepository.save(book);
-            for(int i = 1; i <= 100; ++i)
-            {
-                Book b = new Book("img","book"+i,"author",
-                        "publisher","isbn");
-                b.setMember(admin);
-                em.persist(b);
-            }
+//            for(int i = 1; i <= 100; ++i)
+//            {
+//                Book b = new Book("img","book"+i,"author",
+//                        "publisher","isbn");
+//                b.setMember(admin);
+//                em.persist(b);
+//            }
         }
     }
 }

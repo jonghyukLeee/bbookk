@@ -10,5 +10,4 @@ public class ModifyForm {
     private String si;
     private String gu;
     private String dong;
-
 }
