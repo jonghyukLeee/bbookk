@@ -41,9 +41,9 @@ public class Book {
         this.order = order;
     }
 
-    public String getStatus()
+    public boolean getStatus()
     {
-        return this.order == null ? "대여가능" : "대여불가";
+        return this.order == null;
     }
 
     public Book(String imgSource, String bookName, String author, String publisher, String isbn) {

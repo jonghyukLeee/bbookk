@@ -12,6 +12,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 import static com.bbookk.entity.QBook.book;
 import static com.bbookk.entity.QMember.member;
@@ -45,12 +46,10 @@ public class BookRepositoryImpl implements BookRepositoryCustom{
     public Book findMemberBook(Long id, String bookName) {
         return queryFactory
                 .selectFrom(book)
-                .leftJoin(book.member, member)
                 .where(
                         book.bookName.eq(bookName),
                         book.member.id.eq(id)
-                )
-                .fetchOne();
+                ).fetchOne();
     }
 
     @Override
@@ -83,21 +82,20 @@ public class BookRepositoryImpl implements BookRepositoryCustom{
         return PageableExecutionUtils.getPage(results,pageable, countQuery::fetchCount);
     }
 
-    @Override
-    public BookDetailsDto getBookDetails(Long id, String bookName) {
-        Book findBook = queryFactory.selectFrom(book)
-                .leftJoin(book.member, member)
-                .where(
-                        member.id.eq(id),
-                        book.bookName.eq(bookName)
-                ).fetchOne();
-
-        Member findMember = queryFactory.selectFrom(QMember.member)
-                .where(QMember.member.id.eq(id))
-                .fetchOne();
-
-        return new BookDetailsDto(findBook.getImgSource(),findBook.getBookName(),
-                findMember.getName(),findBook.getStatus());
-
-    }
+//    @Override
+//    public BookDetailsDto getBookDetails(Long id, String bookName) {
+//        Book findBook = queryFactory.selectFrom(book)
+//                .leftJoin(book.member, member)
+//                .where(
+//                        member.id.eq(id),
+//                        book.bookName.eq(bookName)
+//                ).fetchOne();
+//
+//        Member findMember = queryFactory.selectFrom(QMember.member)
+//                .where(QMember.member.id.eq(id))
+//                .fetchOne();
+//
+//        return new BookDetailsDto(findBook.getImgSource(),findBook.getBookName(),
+//                findMember.getName(),findBook.getStatus());
+//    }
 }

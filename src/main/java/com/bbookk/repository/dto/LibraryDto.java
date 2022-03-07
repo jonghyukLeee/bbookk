@@ -1,7 +1,5 @@
 package com.bbookk.repository.dto;
 
-import com.bbookk.entity.OrderStatus;
-import com.bbookk.entity.Orders;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 

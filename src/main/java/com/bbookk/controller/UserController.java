@@ -23,10 +23,8 @@ public class UserController {
     private final BCryptPasswordEncoder encoder;
 
     @GetMapping("/")
-    public String home(@AuthenticationPrincipal CustomUserDetails userDetails,Model model)
+    public String home()
     {
-        Member curMember = userDetails.getMember();
-        model.addAttribute("name",curMember.getName());
         return "index";
     }
 
@@ -53,6 +51,12 @@ public class UserController {
         memberService.join(member);
 
         return "redirect:/";
+    }
+
+    @GetMapping("/test")
+    public String test()
+    {
+        return "test";
     }
 
 }

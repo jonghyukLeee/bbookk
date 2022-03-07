@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,6 +23,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -63,14 +65,6 @@ public class MemberApiController {
     {
         return bookRepository.findBooks(userDetails.getMember().getAddress().getGu(),query,pageable);
     }
-
-    @GetMapping("/v1/details/book")
-    public BookDetailsDto bookDetails(@RequestParam("memberId") Long id,
-                                      @RequestParam("bookName") String bookName)
-    {
-        return bookRepository.getBookDetails(id,bookName);
-    }
-
 
     @GetMapping("/v1/borrow/book")
     public Map<String,String> rentRequest(@AuthenticationPrincipal CustomUserDetails userDetails,
