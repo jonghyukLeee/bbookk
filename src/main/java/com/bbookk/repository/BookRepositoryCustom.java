@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BookRepositoryCustom {
-    List<LibraryDto> getLibrary(Long id);
+    Page<LibraryDto> getLibrary(Long id,Pageable pageable);
     Book findMemberBook(Long id, String bookName);
     Page<FindBooksDto> findBooks(String gu, String query, Pageable pageable);
     //BookDetailsDto getBookDetails(Long id, String bookName);

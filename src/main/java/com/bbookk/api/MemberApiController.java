@@ -63,7 +63,10 @@ public class MemberApiController {
                                         @RequestParam("query") String query,
                                         Pageable pageable)
     {
-        return bookRepository.findBooks(userDetails.getMember().getAddress().getGu(),query,pageable);
+        Page<FindBooksDto> getPage = bookRepository.findBooks(userDetails.getMember().getAddress().getGu(),
+                query, pageable);
+        return getPage;
+
     }
 
     @GetMapping("/v1/borrow/book")
@@ -73,7 +76,6 @@ public class MemberApiController {
     {
         Long borrowerId = userDetails.getMember().getId();
         Map<String,String> res = new HashMap<>();
-        System.out.println("borrowerID = "+borrowerId+", lenderId = "+id);
         if(borrowerId.equals(id)) //자신의 책을 선택한경우
         {
             System.out.println("sameId");

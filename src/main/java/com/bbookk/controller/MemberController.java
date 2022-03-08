@@ -12,6 +12,9 @@ import com.bbookk.repository.dto.FindBooksDto;
 import com.bbookk.repository.dto.MyBookDetailsDto;
 import com.bbookk.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -116,11 +119,13 @@ public class MemberController {
     }
     //나의 서재
     @GetMapping("/library")
-    public String myLibrary(@AuthenticationPrincipal CustomUserDetails userDetails,Model model)
+    public String myLibrary(@AuthenticationPrincipal CustomUserDetails userDetails,
+                            Pageable pageable,
+                            Model model)
     {
-        List<LibraryDto> library = memberService.getLibrary(userDetails.getMember());
+        Page<LibraryDto> library = memberService.getLibrary(userDetails.getMember(),pageable);
         model.addAttribute("library",library);
-        return "library";
+        return "/library";
     }
 
     @PostMapping("/delete/book")
@@ -128,7 +133,7 @@ public class MemberController {
                              @RequestParam("bookName") String bookName)
     {
         memberService.deleteBook(userDetails.getMember().getId(), bookName);
-        return "redirect:/library";
+        return "/library";
     }
 
     @GetMapping("/details/{bookName}")

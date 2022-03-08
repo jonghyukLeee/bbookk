@@ -1,9 +1,8 @@
 package com.bbookk.repository;
 
 import com.bbookk.entity.Book;
-import com.bbookk.entity.Member;
-import com.bbookk.entity.QMember;
 import com.bbookk.repository.dto.*;
+import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
@@ -12,8 +11,6 @@ import org.springframework.data.support.PageableExecutionUtils;
 
 import javax.persistence.EntityManager;
 import java.util.List;
-import java.util.Optional;
-
 import static com.bbookk.entity.QBook.book;
 import static com.bbookk.entity.QMember.member;
 
@@ -25,9 +22,10 @@ public class BookRepositoryImpl implements BookRepositoryCustom{
     {
         queryFactory = new JPAQueryFactory(em);
     }
+
     @Override
-    public List<LibraryDto> getLibrary(Long id) {
-        return queryFactory
+    public Page<LibraryDto> getLibrary(Long id,Pageable pageable) {
+        List<LibraryDto> res = queryFactory
                 .select(new QLibraryDto(
                         book.imgSource,
                         book.bookName,
@@ -39,7 +37,15 @@ public class BookRepositoryImpl implements BookRepositoryCustom{
                 .where(
                         book.member.id.eq(id)
                 )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
+
+
+        JPAQuery<Book> countQuery = queryFactory.selectFrom(book)
+                .where(book.member.id.eq(id));
+
+        return PageableExecutionUtils.getPage(res,pageable, countQuery::fetchCount);
     }
 
     @Override
@@ -55,6 +61,7 @@ public class BookRepositoryImpl implements BookRepositoryCustom{
     @Override
     public Page<FindBooksDto> findBooks(String gu, String query, Pageable pageable) {
 
+        System.out.println("offset = "+pageable.getOffset());
         //쿼리결과
         List<FindBooksDto> results = queryFactory
                 .select(new QFindBooksDto(
@@ -70,6 +77,8 @@ public class BookRepositoryImpl implements BookRepositoryCustom{
                         member.address.gu.eq(gu),
                         book.bookName.contains(query)
                 )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
 
         //카운트

@@ -10,6 +10,8 @@ import com.bbookk.repository.OrderRepository;
 import com.bbookk.repository.dto.LibraryDto;
 import com.bbookk.repository.dto.FindBooksDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -83,9 +85,9 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    public List<LibraryDto> getLibrary(Member member)
+    public Page<LibraryDto> getLibrary(Member member, Pageable pageable)
     {
-        return bookRepository.getLibrary(member.getId());
+        return bookRepository.getLibrary(member.getId(),pageable);
     }
 
     @Transactional
