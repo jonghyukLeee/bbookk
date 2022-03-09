@@ -7,14 +7,15 @@ import com.bbookk.entity.Book;
 import com.bbookk.entity.Member;
 import com.bbookk.repository.BookRepository;
 import com.bbookk.repository.MemberRepository;
+import com.bbookk.repository.dto.BorrowBooksDto;
+import com.bbookk.repository.dto.BorrowDetailsDto;
 import com.bbookk.repository.dto.LibraryDto;
-import com.bbookk.repository.dto.FindBooksDto;
 import com.bbookk.repository.dto.MyBookDetailsDto;
 import com.bbookk.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,7 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.*;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -120,10 +121,14 @@ public class MemberController {
     //나의 서재
     @GetMapping("/library")
     public String myLibrary(@AuthenticationPrincipal CustomUserDetails userDetails,
-                            Pageable pageable,
+                            @PageableDefault(size = 5)Pageable pageable,
                             Model model)
     {
         Page<LibraryDto> library = memberService.getLibrary(userDetails.getMember(),pageable);
+        int startPage = Math.max(1,library.getPageable().getPageNumber()+1);
+        int endPage = Math.min(library.getTotalPages(),startPage+4);
+        model.addAttribute("start",startPage);
+        model.addAttribute("end",endPage);
         model.addAttribute("library",library);
         return "/library";
     }
@@ -136,26 +141,50 @@ public class MemberController {
         return "/library";
     }
 
-    @GetMapping("/details/{bookName}")
-    public String bookDetails(@AuthenticationPrincipal CustomUserDetails userDetails,
+    @GetMapping("/library/details/{bookName}")
+    public String libraryDetails(@AuthenticationPrincipal CustomUserDetails userDetails,
                               @PathVariable String bookName,
                               Model model)
     {
 
         Long memberId = userDetails.getMember().getId();
         Book findBook = bookRepository.findMemberBook(memberId, bookName);
-        // 위에서 쿼리를 날리고, 이미지 로그가 찍힌 후 갑자기 쿼리가 한번 더나감. 그 쿼리에 대해서 null이 나옴
-        System.out.println("img="+findBook.getImgSource());
         MyBookDetailsDto dto = new MyBookDetailsDto(findBook.getImgSource(),findBook.getBookName());
         String status = findBook.getStatus() ? "대여가능" : "대여중";
         dto.setStatus(status);
         model.addAttribute("details",dto);
         return "myBookDetails";
     }
+
     //대여하기
     @GetMapping("/borrow")
-    public String borrowPage()
+    public String borrowPage(@AuthenticationPrincipal CustomUserDetails userDetails,
+                             @RequestParam(value = "query",defaultValue = "")String query,
+                             @PageableDefault(size=5) Pageable pageable,
+                             Model model)
     {
-        return "borrow";
+        Page<BorrowBooksDto> list = bookRepository.findBooks(userDetails.getMember().getAddress().getGu(),
+                query, pageable);
+        int startPage = Math.max(1,list.getPageable().getPageNumber()+1);
+        int endPage = Math.min(list.getTotalPages(),startPage+4);
+        model.addAttribute("start",startPage);
+        model.addAttribute("end",endPage);
+        model.addAttribute("list",list);
+        return "/borrow";
+    }
+
+    @GetMapping("/borrow/details")
+    public String borrowDetails(@RequestParam("lenderId") Long id,
+                                @RequestParam("bookName") String bookName,
+                                Model model)
+    {
+        Book findBook = bookRepository.findMemberBook(id, bookName);
+        Optional<Member> findMember = memberRepository.findById(id);
+        BorrowDetailsDto dto = new BorrowDetailsDto(findBook.getImgSource(),
+                findBook.getBookName(),findMember.get().getName());
+        String status = findBook.getStatus() ? "대여가능" : "대여중";
+        dto.setStatus(status);
+        model.addAttribute("details",dto);
+        return "/borrow/details";
     }
 }

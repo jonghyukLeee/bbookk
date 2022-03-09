@@ -47,7 +47,7 @@ public class UserController {
         Address address = new Address(form.getSi(),form.getGu(),form.getDong());
         String encodedPwd = encoder.encode(form.getPassword());
 
-        Member member = new Member(form.getName(),form.getLoginId(),form.getNickname(),encodedPwd,form.getPhone(),address);
+        Member member = new Member(form.getName(),form.getLoginId(),encodedPwd,form.getPhone(),address);
         memberService.join(member);
 
         return "redirect:/";

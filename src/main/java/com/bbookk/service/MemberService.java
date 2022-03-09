@@ -8,15 +8,12 @@ import com.bbookk.repository.BookRepository;
 import com.bbookk.repository.MemberRepository;
 import com.bbookk.repository.OrderRepository;
 import com.bbookk.repository.dto.LibraryDto;
-import com.bbookk.repository.dto.FindBooksDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -46,10 +43,6 @@ public class MemberService {
     public boolean isDuplicatedLoginId(String loginId)
     {
         return memberRepository.findByLoginId(loginId) != null;
-    }
-
-    public boolean isDuplicatedNickname(String nickname) {
-        return memberRepository.findByNickname(nickname) != null;
     }
 
     public boolean isDuplicatedBook(Long id,String bookName)

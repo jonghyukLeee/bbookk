@@ -1,19 +1,14 @@
 package com.bbookk.repository;
 
 import com.bbookk.entity.Book;
-import com.bbookk.repository.dto.BookDetailsDto;
-import com.bbookk.repository.dto.FindBooksDto;
+import com.bbookk.repository.dto.BorrowBooksDto;
 import com.bbookk.repository.dto.LibraryDto;
-import com.bbookk.repository.dto.MyBookDetailsDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
-import java.util.Optional;
 
 public interface BookRepositoryCustom {
     Page<LibraryDto> getLibrary(Long id,Pageable pageable);
     Book findMemberBook(Long id, String bookName);
-    Page<FindBooksDto> findBooks(String gu, String query, Pageable pageable);
+    Page<BorrowBooksDto> findBooks(String gu, String query, Pageable pageable);
     //BookDetailsDto getBookDetails(Long id, String bookName);
 }

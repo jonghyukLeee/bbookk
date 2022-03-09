@@ -42,13 +42,6 @@ class UserTest {
     }
 
     @Test
-    public void findByNickname()
-    {
-        Boolean res = memberService.isDuplicatedNickname("강훈");
-        System.out.println(res);
-    }
-
-    @Test
     @Transactional
     public void findMember()
     {

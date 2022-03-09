@@ -3,9 +3,7 @@ package com.bbookk.api;
 import com.bbookk.auth.CustomUserDetails;
 import com.bbookk.entity.Book;
 import com.bbookk.repository.BookRepositoryImpl;
-import com.bbookk.repository.MemberRepository;
-import com.bbookk.repository.dto.BookDetailsDto;
-import com.bbookk.repository.dto.FindBooksDto;
+import com.bbookk.repository.dto.BorrowBooksDto;
 import com.bbookk.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,7 +20,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -59,34 +55,23 @@ public class MemberApiController {
     }
 
     @GetMapping("/v1/find/books")
-    public Page<FindBooksDto> findBooks(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                        @RequestParam("query") String query,
-                                        Pageable pageable)
+    public Page<BorrowBooksDto> findBooks(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                          @RequestParam("query") String query,
+                                          Pageable pageable)
     {
-        Page<FindBooksDto> getPage = bookRepository.findBooks(userDetails.getMember().getAddress().getGu(),
+        Page<BorrowBooksDto> getPage = bookRepository.findBooks(userDetails.getMember().getAddress().getGu(),
                 query, pageable);
         return getPage;
-
     }
 
     @GetMapping("/v1/borrow/book")
-    public Map<String,String> rentRequest(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                           @RequestParam("memberId") Long id,
+    public String rentRequest(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                           @RequestParam("lenderId") Long id,
                                            @RequestParam("bookName")String bookName)
     {
         Long borrowerId = userDetails.getMember().getId();
-        Map<String,String> res = new HashMap<>();
-        if(borrowerId.equals(id)) //자신의 책을 선택한경우
-        {
-            System.out.println("sameId");
-            res.put("res","sameId");
-        }
-        else
-        {
-            Book findBook = bookRepository.findMemberBook(id, bookName);
-            res.put("res",memberService.createOrder(findBook, borrowerId));
-        }
-        return res;
+        // 대여 신청만 하면됨. 오더생성
+        return "";
     }
 
 }

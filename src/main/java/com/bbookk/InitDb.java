@@ -36,9 +36,9 @@ public class InitDb {
 
         public void dbInit1() {
             Address address = new Address("인천","남동구","만수동");
-            Member admin = new Member("admin","admin","admin","123","010",address);
-            Member m1 = new Member("박철준","cjfwns","박철준","123","01000000000",address);
-            Member m2 = new Member("강훈","gns","강훈","123","01000000000",address);
+            Member admin = new Member("admin","admin","123","010",address);
+            Member m1 = new Member("박철준","cjfwns","123","01000000000",address);
+            Member m2 = new Member("강훈","gns","123","01000000000",address);
             admin.setAdmin();
             admin.setPassword(admin.getPassword());
             m1.setPassword(m1.getPassword());

@@ -6,6 +6,5 @@ import java.util.Optional;
 
 public interface MemberRepositoryCustom{
     Member findByLoginId(String loginId);
-    Member findByNickname(String nickname);
     boolean isDuplicateBook(Long id, String bookName);
 }

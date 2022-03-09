@@ -2,7 +2,6 @@ package com.bbookk.repository;
 
 import com.bbookk.entity.Book;
 import com.bbookk.repository.dto.*;
-import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
@@ -59,13 +58,11 @@ public class BookRepositoryImpl implements BookRepositoryCustom{
     }
 
     @Override
-    public Page<FindBooksDto> findBooks(String gu, String query, Pageable pageable) {
+    public Page<BorrowBooksDto> findBooks(String gu, String query, Pageable pageable) {
 
-        System.out.println("offset = "+pageable.getOffset());
-        //쿼리결과
-        List<FindBooksDto> results = queryFactory
-                .select(new QFindBooksDto(
-                        member.id,
+        List<BorrowBooksDto> results = queryFactory
+                .select(new QBorrowBooksDto(
+                        book.member.id,
                         book.imgSource,
                         book.bookName,
                         book.author,
@@ -88,6 +85,7 @@ public class BookRepositoryImpl implements BookRepositoryCustom{
                         member.address.gu.eq(gu),
                         book.bookName.contains(query)
                 );
+
         return PageableExecutionUtils.getPage(results,pageable, countQuery::fetchCount);
     }
 

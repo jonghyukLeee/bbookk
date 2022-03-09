@@ -27,10 +27,4 @@ public class UserApiController {
         return ResponseEntity.ok().body(memberService.isDuplicatedLoginId(loginId));
     }
 
-    @GetMapping("/user/v1/nickname")
-    public ResponseEntity<Boolean> isDuplicateNickname(@RequestParam String nickname)
-    {
-        return ResponseEntity.ok().body(memberService.isDuplicatedNickname(nickname));
-    }
-
 }
