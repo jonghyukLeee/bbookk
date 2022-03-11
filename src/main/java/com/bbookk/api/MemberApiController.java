@@ -2,6 +2,7 @@ package com.bbookk.api;
 
 import com.bbookk.auth.CustomUserDetails;
 import com.bbookk.entity.Book;
+import com.bbookk.entity.Orders;
 import com.bbookk.repository.BookRepositoryImpl;
 import com.bbookk.repository.dto.BorrowBooksDto;
 import com.bbookk.service.MemberService;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -54,24 +56,17 @@ public class MemberApiController {
         return res;
     }
 
-    @GetMapping("/v1/find/books")
-    public Page<BorrowBooksDto> findBooks(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                          @RequestParam("query") String query,
-                                          Pageable pageable)
-    {
-        Page<BorrowBooksDto> getPage = bookRepository.findBooks(userDetails.getMember().getAddress().getGu(),
-                query, pageable);
-        return getPage;
-    }
-
     @GetMapping("/v1/borrow/book")
-    public String rentRequest(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                           @RequestParam("lenderId") Long id,
-                                           @RequestParam("bookName")String bookName)
+    public ResponseEntity<Boolean> rentRequest(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                      @RequestParam("lenderId") Long id,
+                                      @RequestParam("bookName")String bookName)
     {
         Long borrowerId = userDetails.getMember().getId();
         // 대여 신청만 하면됨. 오더생성
-        return "";
+        Orders order = new Orders(borrowerId);
+        Book findBook = bookRepository.findMemberBook(id, bookName);
+        memberService.setOrder(findBook,order);
+        return ResponseEntity.ok().body(true);
     }
 
 }

@@ -100,5 +100,8 @@ public class MemberService {
         return "fail";
     }
 
-
+    @Transactional
+    public void setOrder(Book findBook, Orders order) {
+        findBook.setOrder(order);
+    }
 }

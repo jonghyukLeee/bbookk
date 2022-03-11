@@ -163,7 +163,8 @@ public class MemberController {
                              @PageableDefault(size=5) Pageable pageable,
                              Model model)
     {
-        Page<BorrowBooksDto> list = bookRepository.findBooks(userDetails.getMember().getAddress().getGu(),
+        Member findMember = userDetails.getMember();
+        Page<BorrowBooksDto> list = bookRepository.findBooks(findMember.getId(),findMember.getAddress().getGu(),
                 query, pageable);
         int startPage = Math.max(1,list.getPageable().getPageNumber()+1);
         int endPage = Math.min(list.getTotalPages(),startPage+4);
@@ -185,6 +186,6 @@ public class MemberController {
         String status = findBook.getStatus() ? "대여가능" : "대여중";
         dto.setStatus(status);
         model.addAttribute("details",dto);
-        return "/borrow/details";
+        return "/borrowDetails";
     }
 }

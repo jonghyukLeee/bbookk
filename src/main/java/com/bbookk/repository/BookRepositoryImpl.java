@@ -58,7 +58,7 @@ public class BookRepositoryImpl implements BookRepositoryCustom{
     }
 
     @Override
-    public Page<BorrowBooksDto> findBooks(String gu, String query, Pageable pageable) {
+    public Page<BorrowBooksDto> findBooks(Long id,String gu, String query, Pageable pageable) {
 
         List<BorrowBooksDto> results = queryFactory
                 .select(new QBorrowBooksDto(
@@ -71,6 +71,7 @@ public class BookRepositoryImpl implements BookRepositoryCustom{
                 )).from(book)
                 .leftJoin(book.member, member)
                 .where(
+                        book.member.id.ne(id),
                         member.address.gu.eq(gu),
                         book.bookName.contains(query)
                 )
