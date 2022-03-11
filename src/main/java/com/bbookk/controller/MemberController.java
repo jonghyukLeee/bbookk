@@ -133,13 +133,7 @@ public class MemberController {
         return "/library";
     }
 
-    @PostMapping("/delete/book")
-    public String deleteBook(@AuthenticationPrincipal CustomUserDetails userDetails,
-                             @RequestParam("bookName") String bookName)
-    {
-        memberService.deleteBook(userDetails.getMember().getId(), bookName);
-        return "/library";
-    }
+
 
     @GetMapping("/library/details/{bookName}")
     public String libraryDetails(@AuthenticationPrincipal CustomUserDetails userDetails,

@@ -7,6 +7,7 @@ import com.bbookk.repository.BookRepositoryImpl;
 import com.bbookk.repository.dto.BorrowBooksDto;
 import com.bbookk.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -56,6 +58,14 @@ public class MemberApiController {
         return res;
     }
 
+    @PostMapping("/v1/delete/book")
+    public ResponseEntity<Boolean> deleteBook(@AuthenticationPrincipal CustomUserDetails userDetails,
+                               @RequestParam("bookName") String bookName)
+    {
+        boolean body = memberService.deleteBook(userDetails.getMember().getId(), bookName);
+        return ResponseEntity.ok().body(body);
+    }
+
     @GetMapping("/v1/borrow/book")
     public ResponseEntity<Boolean> rentRequest(@AuthenticationPrincipal CustomUserDetails userDetails,
                                       @RequestParam("lenderId") Long id,
@@ -65,8 +75,8 @@ public class MemberApiController {
         // 대여 신청만 하면됨. 오더생성
         Orders order = new Orders(borrowerId);
         Book findBook = bookRepository.findMemberBook(id, bookName);
-        memberService.setOrder(findBook,order);
-        return ResponseEntity.ok().body(true);
+        boolean body = memberService.setOrder(findBook, order);
+        return ResponseEntity.ok().body(body);
     }
 
 }

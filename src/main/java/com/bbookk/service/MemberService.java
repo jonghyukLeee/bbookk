@@ -84,8 +84,14 @@ public class MemberService {
     }
 
     @Transactional
-    public void deleteBook(Long id, String bookName) {
-        bookRepository.delete(bookRepository.findMemberBook(id,bookName));
+    public boolean deleteBook(Long id, String bookName) {
+        Book findBook = bookRepository.findMemberBook(id, bookName);
+        if(findBook != null)
+        {
+            bookRepository.delete(findBook);
+            return true;
+        }
+        return false;
     }
 
     @Transactional
@@ -101,7 +107,13 @@ public class MemberService {
     }
 
     @Transactional
-    public void setOrder(Book findBook, Orders order) {
-        findBook.setOrder(order);
+    public boolean setOrder(Book findBook, Orders order) {
+        if(findBook.getOrder() == null)
+        {
+            orderRepository.save(order);
+            findBook.setOrder(order);
+            return true;
+        }
+        return false;
     }
 }

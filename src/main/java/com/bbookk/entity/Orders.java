@@ -23,11 +23,6 @@ public class Orders {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    public String getsStatusToString()
-    {
-        return status == OrderStatus.REQUESTED ? "대여요청" : "대여중";
-    }
-
     public Orders(Long borrower_id) {
         this.borrower_id = borrower_id;
         this.orderTime = LocalDateTime.now();
