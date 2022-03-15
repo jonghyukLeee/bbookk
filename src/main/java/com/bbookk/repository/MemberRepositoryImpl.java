@@ -3,6 +3,8 @@ package com.bbookk.repository;
 import com.bbookk.entity.Book;
 import com.bbookk.entity.Member;
 import com.bbookk.entity.QMember;
+import com.bbookk.repository.dto.ProfileDto;
+import com.bbookk.repository.dto.QProfileDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 
@@ -41,6 +43,18 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom{
         return !res.isEmpty();
     }
 
+    @Override
+    public ProfileDto getProfile(Long memberId) {
+        return queryFactory.select(new QProfileDto(
+                member.name,
+                member.address.gu,
+                member.cash
+        )).from(member)
+                .where(
+                        member.id.eq(memberId)
+                )
+                .fetchOne();
+    }
 
 
 }

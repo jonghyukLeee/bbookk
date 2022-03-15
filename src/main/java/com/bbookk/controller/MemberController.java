@@ -1,16 +1,12 @@
 package com.bbookk.controller;
 
 import com.bbookk.auth.CustomUserDetails;
-import com.bbookk.controller.dto.MypageDto;
 import com.bbookk.controller.form.ModifyForm;
 import com.bbookk.entity.Book;
 import com.bbookk.entity.Member;
 import com.bbookk.repository.BookRepository;
 import com.bbookk.repository.MemberRepository;
-import com.bbookk.repository.dto.BorrowBooksDto;
-import com.bbookk.repository.dto.BorrowDetailsDto;
-import com.bbookk.repository.dto.LibraryDto;
-import com.bbookk.repository.dto.MyBookDetailsDto;
+import com.bbookk.repository.dto.*;
 import com.bbookk.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -42,32 +38,6 @@ public class MemberController {
 //        return "admin";
 //    }
 
-    @GetMapping("/profile")
-    public String myPage(@AuthenticationPrincipal CustomUserDetails userDetails, Model model)
-    {
-        //현재 멤버정보
-        Member member = userDetails.getMember();
-        MypageDto res = new MypageDto(member.getName(),member.getCash());
-        model.addAttribute("res",res);
-        return "profile";
-    }
-
-    // 충전기능 삭제
-//    /**
-//     * 캐시 충전
-//     */
-//    @GetMapping("/member/chargeCash")
-//    public String chargePage()
-//    {
-//        return "member/myPage/info/charge";
-//    }
-//    @PostMapping("/member/chargeCash")
-//    public String chargeCash(@AuthenticationPrincipal CustomUserDetails userDetails,
-//                             @RequestParam(value = "amount",required = false) int amount)
-//    {
-//        memberService.addCash(userDetails.getMember(),amount);
-//        return "redirect:/member/myPage";
-//    }
 
     /**
      * 개인정보 수정
@@ -96,6 +66,18 @@ public class MemberController {
         return "redirect:/logout";
     }
 
+    /*
+    프로필
+     */
+    @GetMapping("/profile")
+    public String profile(@AuthenticationPrincipal CustomUserDetails userDetails,
+                          Model model)
+    {
+        Long id = userDetails.getMember().getId();
+        ProfileDto profile = memberRepository.getProfile(id);
+        model.addAttribute("profile",profile);
+        return "profile";
+    }
     /**
      * 도서 관리
      */
@@ -130,7 +112,7 @@ public class MemberController {
         model.addAttribute("start",startPage);
         model.addAttribute("end",endPage);
         model.addAttribute("library",library);
-        return "/library";
+        return "library";
     }
 
 
@@ -165,7 +147,7 @@ public class MemberController {
         model.addAttribute("start",startPage);
         model.addAttribute("end",endPage);
         model.addAttribute("list",list);
-        return "/borrow";
+        return "borrow";
     }
 
     @GetMapping("/borrow/details")
@@ -180,6 +162,7 @@ public class MemberController {
         String status = findBook.getStatus() ? "대여가능" : "대여중";
         dto.setStatus(status);
         model.addAttribute("details",dto);
-        return "/borrowDetails";
+        return "borrowDetails";
     }
+
 }
