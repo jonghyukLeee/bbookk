@@ -9,11 +9,13 @@ import com.bbookk.repository.MemberRepository;
 import com.bbookk.repository.OrderRepository;
 import com.bbookk.repository.dto.LibraryDto;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.Order;
 import java.util.Optional;
 
 @Service
@@ -95,25 +97,9 @@ public class MemberService {
     }
 
     @Transactional
-    public String createOrder(Book findBook, Long borrowerId) {
-        if(findBook.getOrder() == null)
-        {
-            Orders order = new Orders(borrowerId);
-            orderRepository.save(order);
-            findBook.setOrder(order);
-            return "success";
-        }
-        return "fail";
-    }
-
-    @Transactional
-    public boolean setOrder(Book findBook, Orders order) {
-        if(findBook.getOrder() == null)
-        {
-            orderRepository.save(order);
-            findBook.setOrder(order);
-            return true;
-        }
-        return false;
+    public void createOrder(Long borrowerId, Book findBook) {
+        Orders order = new Orders(borrowerId,findBook);
+        orderRepository.save(order);
+        findBook.setRequested();
     }
 }

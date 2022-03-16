@@ -15,16 +15,19 @@ public class Orders {
     @Id @GeneratedValue
     @Column(name = "order_id")
     private Long id;
-
-    private Long borrower_id;
+    private Long borrowerId;
+    @OneToOne
+    @JoinColumn(name = "book_id")
+    private Book book;
 
     private LocalDateTime orderTime;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    public Orders(Long borrower_id) {
-        this.borrower_id = borrower_id;
+    public Orders(Long borrowerId, Book book) {
+        this.borrowerId = borrowerId;
+        this.book = book;
         this.orderTime = LocalDateTime.now();
         this.status = OrderStatus.REQUESTED;
     }

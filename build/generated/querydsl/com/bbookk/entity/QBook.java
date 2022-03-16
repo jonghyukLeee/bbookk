@@ -34,9 +34,9 @@ public class QBook extends EntityPathBase<Book> {
 
     public final QMember member;
 
-    public final QOrders order;
-
     public final StringPath publisher = createString("publisher");
+
+    public final EnumPath<OrderStatus> status = createEnum("status", OrderStatus.class);
 
     public QBook(String variable) {
         this(Book.class, forVariable(variable), INITS);
@@ -57,7 +57,6 @@ public class QBook extends EntityPathBase<Book> {
     public QBook(Class<? extends Book> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.member = inits.isInitialized("member") ? new QMember(forProperty("member"), inits.get("member")) : null;
-        this.order = inits.isInitialized("order") ? new QOrders(forProperty("order")) : null;
     }
 
 }

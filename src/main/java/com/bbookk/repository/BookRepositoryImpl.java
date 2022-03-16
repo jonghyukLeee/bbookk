@@ -90,20 +90,4 @@ public class BookRepositoryImpl implements BookRepositoryCustom{
         return PageableExecutionUtils.getPage(results,pageable, countQuery::fetchCount);
     }
 
-//    @Override
-//    public BookDetailsDto getBookDetails(Long id, String bookName) {
-//        Book findBook = queryFactory.selectFrom(book)
-//                .leftJoin(book.member, member)
-//                .where(
-//                        member.id.eq(id),
-//                        book.bookName.eq(bookName)
-//                ).fetchOne();
-//
-//        Member findMember = queryFactory.selectFrom(QMember.member)
-//                .where(QMember.member.id.eq(id))
-//                .fetchOne();
-//
-//        return new BookDetailsDto(findBook.getImgSource(),findBook.getBookName(),
-//                findMember.getName(),findBook.getStatus());
-//    }
 }

@@ -126,7 +126,7 @@ public class MemberController {
         Long memberId = userDetails.getMember().getId();
         Book findBook = bookRepository.findMemberBook(memberId, bookName);
         MyBookDetailsDto dto = new MyBookDetailsDto(findBook.getImgSource(),findBook.getBookName());
-        String status = findBook.getStatus() ? "대여가능" : "대여중";
+        String status = findBook.getStatus() == null ? "대여가능" : "대여중";
         dto.setStatus(status);
         model.addAttribute("details",dto);
         return "myBookDetails";
@@ -159,10 +159,15 @@ public class MemberController {
         Optional<Member> findMember = memberRepository.findById(id);
         BorrowDetailsDto dto = new BorrowDetailsDto(findBook.getImgSource(),
                 findBook.getBookName(),findMember.get().getName());
-        String status = findBook.getStatus() ? "대여가능" : "대여중";
+        String status = findBook.getStatus () == null ? "대여가능" : "대여중";
         dto.setStatus(status);
         model.addAttribute("details",dto);
         return "borrowDetails";
     }
 
+    @GetMapping("/borrow/requests")
+    public String requests()
+    {
+        return null;
+    }
 }

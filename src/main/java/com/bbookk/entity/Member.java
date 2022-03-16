@@ -46,8 +46,6 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "member")
-    private List<Review> reviews = new ArrayList<>();
 
     @OneToMany(mappedBy = "member",orphanRemoval = true)
     private List<Book> books = new ArrayList<>();

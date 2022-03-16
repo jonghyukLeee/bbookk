@@ -10,5 +10,4 @@ public interface BookRepositoryCustom {
     Page<LibraryDto> getLibrary(Long id,Pageable pageable);
     Book findMemberBook(Long id, String bookName);
     Page<BorrowBooksDto> findBooks(Long id, String gu, String query, Pageable pageable);
-    //BookDetailsDto getBookDetails(Long id, String bookName);
 }

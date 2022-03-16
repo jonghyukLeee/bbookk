@@ -72,11 +72,9 @@ public class MemberApiController {
                                       @RequestParam("bookName")String bookName)
     {
         Long borrowerId = userDetails.getMember().getId();
-        // 대여 신청만 하면됨. 오더생성
-        Orders order = new Orders(borrowerId);
         Book findBook = bookRepository.findMemberBook(id, bookName);
-        boolean body = memberService.setOrder(findBook, order);
-        return ResponseEntity.ok().body(body);
+        memberService.createOrder(borrowerId,findBook);
+        return ResponseEntity.ok().body(true);
     }
 
 }

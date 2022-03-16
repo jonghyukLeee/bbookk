@@ -2,6 +2,7 @@ package com.bbookk.entity;
 
 import com.bbookk.repository.BookRepository;
 import com.bbookk.repository.OrderRepository;
+import com.bbookk.repository.dto.RequestedBooksDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,20 +29,28 @@ public class OrderTest {
     @Transactional
     void setOrderTest()
     {
-        Orders order = new Orders(2L);
-        orderRepository.save(order);
-
         Book getBook = bookRepository.findMemberBook(1L, "달러구트 꿈 백화점");
-        getBook.setOrder(order);
+        Orders order = new Orders(2L,getBook);
+        orderRepository.save(order);
+        getBook.setRequested();
 
         em.persist(getBook);
         em.flush();
 
-        List<Orders> res = em.createQuery("select o from Orders o", Orders.class).getResultList();
+        List<RequestedBooksDto> requestedOrders = orderRepository.getRequestedOrders(1L);
 
-        for (Orders re : res) {
-            System.out.println(re.getBorrower_id());
+        for (RequestedBooksDto requestedOrder : requestedOrders) {
+            System.out.println(requestedOrder.getBookName());
         }
 
+    }
+
+    @Test
+    void getStatus()
+    {
+        Book getBook = bookRepository.findMemberBook(1L, "달러구트 꿈 백화점");
+        System.out.println(getBook.getStatus());
+        getBook.setRequested();
+        System.out.println(getBook.getStatus());
     }
 }

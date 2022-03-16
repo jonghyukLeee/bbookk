@@ -20,15 +20,14 @@ public class Book {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToOne
-    @JoinColumn(name = "order_id")
-    private Orders order;
-
     private String imgSource;
     private String bookName;
     private String author;
     private String publisher;
     private String isbn;
+
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
 
     public void setMember(Member member)
     {
@@ -36,14 +35,9 @@ public class Book {
         member.getBooks().add(this);
     }
 
-    public void setOrder(Orders order)
+    public void setRequested()
     {
-        this.order = order;
-    }
-
-    public boolean getStatus()
-    {
-        return this.order == null;
+        this.status = OrderStatus.REQUESTED;
     }
 
     public Book(String imgSource, String bookName, String author, String publisher, String isbn) {

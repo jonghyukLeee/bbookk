@@ -40,8 +40,6 @@ public class QMember extends EntityPathBase<Member> {
 
     public final NumberPath<Long> rating = createNumber("rating", Long.class);
 
-    public final ListPath<Review, QReview> reviews = this.<Review, QReview>createList("reviews", Review.class, QReview.class, PathInits.DIRECT2);
-
     public final EnumPath<Role> role = createEnum("role", Role.class);
 
     public QMember(String variable) {
