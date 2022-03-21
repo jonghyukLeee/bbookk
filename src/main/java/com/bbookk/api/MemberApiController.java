@@ -2,6 +2,7 @@ package com.bbookk.api;
 
 import com.bbookk.auth.CustomUserDetails;
 import com.bbookk.entity.Book;
+import com.bbookk.entity.Member;
 import com.bbookk.repository.BookRepositoryImpl;
 import com.bbookk.service.MemberService;
 import com.bbookk.service.OrderService;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
@@ -68,16 +70,24 @@ public class MemberApiController {
                                       @RequestParam("lenderId") Long id,
                                       @RequestParam("bookName")String bookName)
     {
-        Long borrowerId = userDetails.getMember().getId();
-        Book findBook = bookRepository.findMemberBook(id, bookName);
-        memberService.createOrder(borrowerId,findBook);
-        return ResponseEntity.ok().body(true);
+        Member curMember = userDetails.getMember();
+        //캐시가 부족할경우 false
+        boolean response = memberService.subCashBorrowRequest(curMember.getId());
+        if(response)
+        {
+            Long borrowerId = curMember.getId();
+            Book findBook = bookRepository.findMemberBook(id, bookName);
+            memberService.createOrder(borrowerId,findBook);
+        }
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/v1/accept/order")
-    public ResponseEntity<Boolean> acceptOrder(@RequestParam("orderId") Long orderId)
+    public ResponseEntity<Boolean> acceptOrder(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                               @RequestParam("orderId") Long orderId)
     {
         orderService.acceptRequest(orderId);
+        memberService.addCashLendBook(userDetails.getMember().getId());
         return ResponseEntity.ok().body(true);
     }
 

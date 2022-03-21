@@ -1,6 +1,8 @@
 package com.bbookk.service;
 
+import com.bbookk.entity.Member;
 import com.bbookk.entity.Orders;
+import com.bbookk.repository.MemberRepository;
 import com.bbookk.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import java.util.Optional;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final MemberService memberService;
 
     @Transactional
     public void acceptRequest(Long orderId)

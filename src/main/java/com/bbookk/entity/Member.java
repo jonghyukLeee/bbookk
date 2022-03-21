@@ -60,6 +60,11 @@ public class Member {
         this.cash += amount;
     }
 
+    public void subCash(int amount)
+    {
+        this.cash -= amount;
+    }
+
     public void modify(ModifyForm form) {
         this.name = form.getName();
         this.phone = form.getPhone();

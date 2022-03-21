@@ -1,7 +1,9 @@
 package com.bbookk.repository;
 
 import com.bbookk.entity.OrderStatus;
-import com.bbookk.repository.dto.QRequestedBooksDto;
+import com.bbookk.repository.dto.BorrowListDto;
+import com.bbookk.repository.dto.QBorrowListDto;
+import com.bbookk.repository.dto.QRequestsDto;
 import com.bbookk.repository.dto.RequestsDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -21,7 +23,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
 
     @Override
     public List<RequestsDto> getRequestedOrders(Long id) {
-        return queryFactory.select(new QRequestedBooksDto(
+        return queryFactory.select(new QRequestsDto(
                         orders.id,
                         book.imgSource,
                         book.bookName,
@@ -31,6 +33,20 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
                 .where(
                         book.member.id.eq(id),
                         orders.status.eq(OrderStatus.REQUESTED)
+                ).fetch();
+    }
+
+    @Override
+    public List<BorrowListDto> getBorrowList(Long id) {
+        return queryFactory.select(new QBorrowListDto(
+                book.imgSource,
+                book.bookName,
+                orders.orderTime,
+                book.status
+        )).from(orders)
+                .leftJoin(orders.book, book)
+                .where(
+                        orders.borrowerId.eq(id)
                 ).fetch();
     }
 }

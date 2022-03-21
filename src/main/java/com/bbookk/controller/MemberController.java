@@ -105,7 +105,9 @@ public class MemberController {
                                    @RequestParam("isbn") String isbn)
     {
         Book book = new Book(img,title,author,publisher,isbn);
-        memberService.addBook(userDetails.getMember().getId(),book);
+        Long memberId = userDetails.getMember().getId();
+        memberService.addBook(memberId,book);
+        memberService.addCashResisterBook(memberId);
         return "registerBook";
     }
     //나의 서재
@@ -183,9 +185,12 @@ public class MemberController {
     }
 
     @GetMapping("/borrow/list")
-    public String borrowList(@AuthenticationPrincipal CustomUserDetails userDetails)
+    public String borrowList(@AuthenticationPrincipal CustomUserDetails userDetails,
+                             Model model)
     {
         Member curMember = memberRepository.findById(userDetails.getMember().getId()).get();
-        return null;
+        List<BorrowListDto> res = orderRepository.getBorrowList(curMember.getId());
+        model.addAttribute("list",res);
+        return "borrowList";
     }
 }

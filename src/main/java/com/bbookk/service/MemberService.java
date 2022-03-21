@@ -62,17 +62,30 @@ public class MemberService {
     public void addBook(Long id, Book book)
     {
         Optional<Member> findMember = memberRepository.findById(id);
-
         findMember.ifPresent(book::setMember);
         bookRepository.save(book);
     }
 
+    @Transactional
+    public void addCashResisterBook(Long id)
+    {
+        Optional<Member> findMember = memberRepository.findById(id);
+        findMember.get().addCash(500);
+    }
+    @Transactional
+    public void addCashLendBook(Long id)
+    {
+        Member findMember = memberRepository.findById(id).get();
+        findMember.addCash(200);
+    }
 
     @Transactional
-    public void addCash(Member member,int amount)
+    public boolean subCashBorrowRequest(Long id)
     {
-        member.addCash(amount);
-        memberRepository.save(member);
+        Member findMember = memberRepository.findById(id).get();
+        if(findMember.getCash() < 200) return false;
+        findMember.subCash(200);
+        return true;
     }
 
     public Page<LibraryDto> getLibrary(Member member, Pageable pageable)
