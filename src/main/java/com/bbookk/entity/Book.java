@@ -40,6 +40,11 @@ public class Book {
         this.status = OrderStatus.REQUESTED;
     }
 
+    public void setLend()
+    {
+        this.status = OrderStatus.LEND;
+    }
+
     public Book(String imgSource, String bookName, String author, String publisher, String isbn) {
         this.imgSource = imgSource;
         this.bookName = bookName;

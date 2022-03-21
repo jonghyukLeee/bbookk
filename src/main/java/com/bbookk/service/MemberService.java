@@ -68,11 +68,6 @@ public class MemberService {
     }
 
 
-
-    public boolean isMember(String loginId, String password) {
-        return memberRepository.existsByLoginIdAndPassword(loginId,password);
-    }
-
     @Transactional
     public void addCash(Member member,int amount)
     {
@@ -98,7 +93,7 @@ public class MemberService {
 
     @Transactional
     public void createOrder(Long borrowerId, Book findBook) {
-        Orders order = new Orders(borrowerId,findBook);
+        Orders order = new Orders(borrowerId,memberRepository.findById(borrowerId).get().getName(),findBook);
         orderRepository.save(order);
         findBook.setRequested();
     }

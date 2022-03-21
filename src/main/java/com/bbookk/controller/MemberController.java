@@ -4,10 +4,13 @@ import com.bbookk.auth.CustomUserDetails;
 import com.bbookk.controller.form.ModifyForm;
 import com.bbookk.entity.Book;
 import com.bbookk.entity.Member;
+import com.bbookk.entity.Orders;
 import com.bbookk.repository.BookRepository;
 import com.bbookk.repository.MemberRepository;
+import com.bbookk.repository.OrderRepository;
 import com.bbookk.repository.dto.*;
 import com.bbookk.service.MemberService;
+import com.bbookk.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,14 +23,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
 public class MemberController {
+    //Service
     private final MemberService memberService;
+
+    //Repo
     private final BookRepository bookRepository;
     private final MemberRepository memberRepository;
+    private final OrderRepository orderRepository;
 
     /**
      * admin 페이지
@@ -165,9 +173,19 @@ public class MemberController {
         return "borrowDetails";
     }
 
-    @GetMapping("/borrow/requests")
-    public String requests()
+    @GetMapping("/requests")
+    public String requests(@AuthenticationPrincipal CustomUserDetails userDetails,
+                           Model model)
     {
+        List<RequestsDto> res = orderRepository.getRequestedOrders(userDetails.getMember().getId());
+        model.addAttribute("list",res);
+        return "requests";
+    }
+
+    @GetMapping("/borrow/list")
+    public String borrowList(@AuthenticationPrincipal CustomUserDetails userDetails)
+    {
+        Member curMember = memberRepository.findById(userDetails.getMember().getId()).get();
         return null;
     }
 }

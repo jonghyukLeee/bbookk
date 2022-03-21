@@ -16,6 +16,8 @@ public class Orders {
     @Column(name = "order_id")
     private Long id;
     private Long borrowerId;
+    private String borrowerName;
+
     @OneToOne
     @JoinColumn(name = "book_id")
     private Book book;
@@ -25,8 +27,15 @@ public class Orders {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    public Orders(Long borrowerId, Book book) {
+    public void setLend()
+    {
+        this.status = OrderStatus.LEND;
+        this.book.setLend();
+    }
+
+    public Orders(Long borrowerId, String borrowerName, Book book) {
         this.borrowerId = borrowerId;
+        this.borrowerName = borrowerName;
         this.book = book;
         this.orderTime = LocalDateTime.now();
         this.status = OrderStatus.REQUESTED;

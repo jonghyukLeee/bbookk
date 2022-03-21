@@ -2,7 +2,7 @@ package com.bbookk.repository;
 
 import com.bbookk.entity.OrderStatus;
 import com.bbookk.repository.dto.QRequestedBooksDto;
-import com.bbookk.repository.dto.RequestedBooksDto;
+import com.bbookk.repository.dto.RequestsDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
@@ -20,15 +20,17 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
     }
 
     @Override
-    public List<RequestedBooksDto> getRequestedOrders(Long id) {
+    public List<RequestsDto> getRequestedOrders(Long id) {
         return queryFactory.select(new QRequestedBooksDto(
-                orders.book.imgSource,
-                orders.book.bookName
-                ))
-                .from(orders)
+                        orders.id,
+                        book.imgSource,
+                        book.bookName,
+                        orders.borrowerName
+                )).from(orders)
+                .leftJoin(orders.book,book)
                 .where(
-                        orders.book.id.eq(id),
-                        orders.status.eq(OrderStatus.REQUESTED))
-                .fetch();
+                        book.member.id.eq(id),
+                        orders.status.eq(OrderStatus.REQUESTED)
+                ).fetch();
     }
 }

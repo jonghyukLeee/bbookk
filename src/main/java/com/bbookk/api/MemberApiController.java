@@ -2,23 +2,16 @@ package com.bbookk.api;
 
 import com.bbookk.auth.CustomUserDetails;
 import com.bbookk.entity.Book;
-import com.bbookk.entity.Orders;
 import com.bbookk.repository.BookRepositoryImpl;
-import com.bbookk.repository.dto.BorrowBooksDto;
 import com.bbookk.service.MemberService;
+import com.bbookk.service.OrderService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -29,6 +22,10 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class MemberApiController {
 
+    //Service
+    private final OrderService orderService;
+
+    //Repo
     private final MemberService memberService;
     private final BookRepositoryImpl bookRepository;
 
@@ -74,6 +71,13 @@ public class MemberApiController {
         Long borrowerId = userDetails.getMember().getId();
         Book findBook = bookRepository.findMemberBook(id, bookName);
         memberService.createOrder(borrowerId,findBook);
+        return ResponseEntity.ok().body(true);
+    }
+
+    @GetMapping("/v1/accept/order")
+    public ResponseEntity<Boolean> acceptOrder(@RequestParam("orderId") Long orderId)
+    {
+        orderService.acceptRequest(orderId);
         return ResponseEntity.ok().body(true);
     }
 
