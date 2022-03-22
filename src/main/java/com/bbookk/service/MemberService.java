@@ -2,9 +2,11 @@ package com.bbookk.service;
 
 import com.bbookk.controller.form.ModifyForm;
 import com.bbookk.entity.Book;
+import com.bbookk.entity.BooksOfMonth;
 import com.bbookk.entity.Member;
 import com.bbookk.entity.Orders;
 import com.bbookk.repository.BookRepository;
+import com.bbookk.repository.BooksOfMonthRepository;
 import com.bbookk.repository.MemberRepository;
 import com.bbookk.repository.OrderRepository;
 import com.bbookk.repository.dto.LibraryDto;
@@ -26,6 +28,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final BookRepository bookRepository;
     private final OrderRepository orderRepository;
+    private final BooksOfMonthRepository bomRepository;
 
     @Transactional
     public void join(Member member)
@@ -63,6 +66,14 @@ public class MemberService {
     {
         Optional<Member> findMember = memberRepository.findById(id);
         findMember.ifPresent(book::setMember);
+        //처음 등록된 책이면 Bom에 insert
+        BooksOfMonth getBom = bomRepository.findByBookName(book.getBookName());
+        if(getBom == null)
+        {
+            BooksOfMonth bom = new BooksOfMonth(book.getImgSource(),book.getBookName());
+            bomRepository.save(bom);
+        }
+        else getBom.addCnt();
         bookRepository.save(book);
     }
 

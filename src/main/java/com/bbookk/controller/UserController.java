@@ -3,7 +3,9 @@ package com.bbookk.controller;
 import com.bbookk.auth.CustomUserDetails;
 import com.bbookk.controller.form.MemberForm;
 import com.bbookk.entity.Address;
+import com.bbookk.entity.BooksOfMonth;
 import com.bbookk.entity.Member;
+import com.bbookk.repository.BooksOfMonthRepository;
 import com.bbookk.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,17 +16,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 public class UserController {
 
     private final MemberService memberService;
+    private final BooksOfMonthRepository bomRepository;
     private final BCryptPasswordEncoder encoder;
 
     @GetMapping("/")
-    public String home()
+    public String home(Model model)
     {
+        List<BooksOfMonth> list = bomRepository.getBooksOfMonth();
+        model.addAttribute("list",list);
         return "index";
     }
 
