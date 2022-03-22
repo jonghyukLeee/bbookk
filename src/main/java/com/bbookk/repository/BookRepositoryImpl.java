@@ -1,0 +1,93 @@
+package com.bbookk.repository;
+
+import com.bbookk.entity.Book;
+import com.bbookk.repository.dto.*;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
+
+import javax.persistence.EntityManager;
+import java.util.List;
+import static com.bbookk.entity.QBook.book;
+import static com.bbookk.entity.QMember.member;
+
+public class BookRepositoryImpl implements BookRepositoryCustom{
+
+    private final JPAQueryFactory queryFactory;
+
+    public BookRepositoryImpl(EntityManager em)
+    {
+        queryFactory = new JPAQueryFactory(em);
+    }
+
+    @Override
+    public Page<LibraryDto> getLibrary(Long id,Pageable pageable) {
+        List<LibraryDto> res = queryFactory
+                .select(new QLibraryDto(
+                        book.imgSource,
+                        book.bookName,
+                        book.author,
+                        book.publisher,
+                        book.isbn
+                ))
+                .from(book)
+                .where(
+                        book.member.id.eq(id)
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+
+        JPAQuery<Book> countQuery = queryFactory.selectFrom(book)
+                .where(book.member.id.eq(id));
+
+        return PageableExecutionUtils.getPage(res,pageable, countQuery::fetchCount);
+    }
+
+    @Override
+    public Book findMemberBook(Long id, String bookName) {
+        return queryFactory
+                .selectFrom(book)
+                .where(
+                        book.bookName.eq(bookName),
+                        book.member.id.eq(id)
+                ).fetchOne();
+    }
+
+    @Override
+    public Page<BorrowBooksDto> findBooks(Long id,String gu, String query, Pageable pageable) {
+
+        List<BorrowBooksDto> results = queryFactory
+                .select(new QBorrowBooksDto(
+                        book.member.id,
+                        book.imgSource,
+                        book.bookName,
+                        book.author,
+                        book.publisher,
+                        member.name
+                )).from(book)
+                .leftJoin(book.member, member)
+                .where(
+                        book.member.id.ne(id),
+                        member.address.gu.eq(gu),
+                        book.bookName.contains(query)
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        //카운트
+        JPAQuery<Book> countQuery = queryFactory.selectFrom(book)
+                .leftJoin(book.member, member)
+                .where(
+                        member.address.gu.eq(gu),
+                        book.bookName.contains(query)
+                );
+
+        return PageableExecutionUtils.getPage(results,pageable, countQuery::fetchCount);
+    }
+
+}
