@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -21,6 +22,7 @@ public class BooksOfMonth {
 
     private String imgSource;
     private String bookName;
+    private LocalDateTime registerTime;
     private int registerCnt;
 
     public void addCnt()
@@ -31,6 +33,7 @@ public class BooksOfMonth {
     {
         this.imgSource = imgSource;
         this.bookName = bookName;
+        this.registerTime = LocalDateTime.now();
         this.registerCnt = 1;
     }
 }

@@ -50,6 +50,9 @@ public class Member {
     @OneToMany(mappedBy = "member",orphanRemoval = true)
     private List<Book> books = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member",orphanRemoval = true)
+    private List<Orders> orders = new ArrayList<>();
+
     public void setAdmin()
     {
         this.role = Role.ROLE_ADMIN;

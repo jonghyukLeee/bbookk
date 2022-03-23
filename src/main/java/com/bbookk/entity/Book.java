@@ -35,15 +35,11 @@ public class Book {
         member.getBooks().add(this);
     }
 
-    public void setRequested()
+    public void setStatus(OrderStatus status)
     {
-        this.status = OrderStatus.REQUESTED;
+        this.status = status;
     }
 
-    public void setLend()
-    {
-        this.status = OrderStatus.LEND;
-    }
 
     public Book(String imgSource, String bookName, String author, String publisher, String isbn) {
         this.imgSource = imgSource;

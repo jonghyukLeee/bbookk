@@ -19,7 +19,7 @@ public class BookTest {
     void getStatus()
     {
         Book book = new Book("img","name","au","pub","isbn");
-        book.setRequested();
+        book.setStatus(OrderStatus.REQUESTED);
         em.persist(book);
         em.flush();
 

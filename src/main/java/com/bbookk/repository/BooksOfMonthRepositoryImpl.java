@@ -28,7 +28,8 @@ public class BooksOfMonthRepositoryImpl implements BooksOfMonthRepositoryCustom{
     @Override
     public List<BooksOfMonth> getBooksOfMonth() {
         return queryFactory.selectFrom(booksOfMonth)
-                .orderBy(booksOfMonth.registerCnt.desc())
+                .orderBy(booksOfMonth.registerCnt.desc(),booksOfMonth.registerTime.asc())
+                .limit(3)
                 .fetch();
     }
 }

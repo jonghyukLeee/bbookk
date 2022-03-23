@@ -32,7 +32,7 @@ public class OrderTest {
         Book getBook = bookRepository.findMemberBook(1L, "달러구트 꿈 백화점");
         Orders order = new Orders(2L,"박철준",getBook);
         orderRepository.save(order);
-        getBook.setRequested();
+        getBook.setStatus(OrderStatus.REQUESTED);
 
         em.persist(getBook);
         em.flush();
@@ -50,7 +50,7 @@ public class OrderTest {
     {
         Book getBook = bookRepository.findMemberBook(1L, "달러구트 꿈 백화점");
         System.out.println(getBook.getStatus());
-        getBook.setRequested();
+        getBook.setStatus(OrderStatus.REQUESTED);
         System.out.println(getBook.getStatus());
     }
 }

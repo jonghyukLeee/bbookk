@@ -4,6 +4,7 @@ import com.bbookk.auth.CustomUserDetails;
 import com.bbookk.entity.Book;
 import com.bbookk.entity.Member;
 import com.bbookk.repository.BookRepositoryImpl;
+import com.bbookk.repository.OrderRepository;
 import com.bbookk.service.MemberService;
 import com.bbookk.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -87,7 +88,16 @@ public class MemberApiController {
                                                @RequestParam("orderId") Long orderId)
     {
         orderService.acceptRequest(orderId);
-        memberService.addCashLendBook(userDetails.getMember().getId());
+        Long memberId = userDetails.getMember().getId();
+        orderService.setMember(orderId,memberId);
+        memberService.addCashLendBook(memberId);
+        return ResponseEntity.ok().body(true);
+    }
+
+    @PostMapping("/v1/delete/order")
+    public ResponseEntity<Boolean> deleteOrder(@RequestParam("orderId") Long orderId)
+    {
+        orderService.delete(orderId);
         return ResponseEntity.ok().body(true);
     }
 

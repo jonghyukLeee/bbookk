@@ -15,6 +15,11 @@ public class Orders {
     @Id @GeneratedValue
     @Column(name = "order_id")
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "lender_id")
+    private Member member;
+
     private Long borrowerId;
     private String borrowerName;
 
@@ -27,10 +32,16 @@ public class Orders {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    public void setLend()
+    public void setMember(Member member)
     {
-        this.status = OrderStatus.LEND;
-        this.book.setLend();
+        this.member = member;
+        member.getOrders().add(this);
+    }
+
+    public void setStatus(OrderStatus status)
+    {
+        this.status = status;
+        this.book.setStatus(status);
     }
 
     public Orders(Long borrowerId, String borrowerName, Book book) {

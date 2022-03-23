@@ -4,9 +4,7 @@ import com.bbookk.auth.CustomUserDetails;
 import com.bbookk.controller.form.ModifyForm;
 import com.bbookk.entity.Book;
 import com.bbookk.entity.Member;
-import com.bbookk.entity.Orders;
 import com.bbookk.repository.BookRepository;
-import com.bbookk.repository.BooksOfMonthRepository;
 import com.bbookk.repository.MemberRepository;
 import com.bbookk.repository.OrderRepository;
 import com.bbookk.repository.dto.*;
@@ -32,6 +30,7 @@ import java.util.Optional;
 public class MemberController {
     //Service
     private final MemberService memberService;
+    private final OrderService orderService;
 
     //Repo
     private final BookRepository bookRepository;
@@ -176,13 +175,22 @@ public class MemberController {
         return "borrowDetails";
     }
 
-    @GetMapping("/requests")
-    public String requests(@AuthenticationPrincipal CustomUserDetails userDetails,
+    @GetMapping("/requests/borrow")
+    public String borrowRequests(@AuthenticationPrincipal CustomUserDetails userDetails,
                            Model model)
     {
         List<RequestsDto> res = orderRepository.getRequestedOrders(userDetails.getMember().getId());
         model.addAttribute("list",res);
-        return "requests";
+        return "borrowRequests";
+    }
+
+    @GetMapping("/requests/return")
+    public String returnRequests(@AuthenticationPrincipal CustomUserDetails userDetails,
+                           Model model)
+    {
+        List<RequestsDto> res = orderRepository.getReturnOrders(userDetails.getMember().getId());
+        model.addAttribute("list",res);
+        return "returnRequests";
     }
 
     @GetMapping("/borrow/list")
@@ -192,6 +200,26 @@ public class MemberController {
         Member curMember = memberRepository.findById(userDetails.getMember().getId()).get();
         List<BorrowListDto> res = orderRepository.getBorrowList(curMember.getId());
         model.addAttribute("list",res);
+        return "borrowList";
+    }
+
+    @GetMapping("/borrow/list/details/{bookName}")
+    public String borrowListDetails(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                    @PathVariable("bookName") String bookName,
+                                    Model model)
+    {
+        Long memberId = userDetails.getMember().getId();
+        BorrowListDetailsDto res = orderRepository.getBorrowListDetails(memberId, bookName);
+        model.addAttribute("details",res);
+        return "borrowListDetails";
+    }
+
+    @GetMapping("/return/book/{bookName}")
+    public String returnBook(@AuthenticationPrincipal CustomUserDetails userDetails,
+                             @PathVariable("bookName")String bookName)
+    {
+        Long memberId = userDetails.getMember().getId();
+        orderService.returnRequest(memberId,bookName);
         return "borrowList";
     }
 }

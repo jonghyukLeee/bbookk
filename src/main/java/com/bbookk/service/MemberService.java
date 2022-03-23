@@ -1,10 +1,7 @@
 package com.bbookk.service;
 
 import com.bbookk.controller.form.ModifyForm;
-import com.bbookk.entity.Book;
-import com.bbookk.entity.BooksOfMonth;
-import com.bbookk.entity.Member;
-import com.bbookk.entity.Orders;
+import com.bbookk.entity.*;
 import com.bbookk.repository.BookRepository;
 import com.bbookk.repository.BooksOfMonthRepository;
 import com.bbookk.repository.MemberRepository;
@@ -119,6 +116,8 @@ public class MemberService {
     public void createOrder(Long borrowerId, Book findBook) {
         Orders order = new Orders(borrowerId,memberRepository.findById(borrowerId).get().getName(),findBook);
         orderRepository.save(order);
-        findBook.setRequested();
+        findBook.setStatus(OrderStatus.REQUESTED);
     }
+
+
 }

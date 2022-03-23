@@ -30,6 +30,8 @@ public class QOrders extends EntityPathBase<Orders> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final QMember member;
+
     public final DateTimePath<java.time.LocalDateTime> orderTime = createDateTime("orderTime", java.time.LocalDateTime.class);
 
     public final EnumPath<OrderStatus> status = createEnum("status", OrderStatus.class);
@@ -53,6 +55,7 @@ public class QOrders extends EntityPathBase<Orders> {
     public QOrders(Class<? extends Orders> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.book = inits.isInitialized("book") ? new QBook(forProperty("book"), inits.get("book")) : null;
+        this.member = inits.isInitialized("member") ? new QMember(forProperty("member"), inits.get("member")) : null;
     }
 
 }
