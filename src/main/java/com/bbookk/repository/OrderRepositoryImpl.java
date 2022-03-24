@@ -82,7 +82,9 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
         String lenderName = queryFactory.select(orders.member.name)
                 .from(orders)
                 .join(orders.member,member)
-                .where(orders.borrowerId.eq(id)).fetchOne();
+                .where(orders.borrowerId.eq(id))
+                .limit(1)
+                .fetchOne();
 
         res.setLenderName(lenderName);
 

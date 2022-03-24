@@ -6,17 +6,22 @@ import com.bbookk.entity.Address;
 import com.bbookk.entity.BooksOfMonth;
 import com.bbookk.entity.Member;
 import com.bbookk.repository.BooksOfMonthRepository;
+import com.bbookk.repository.OrderRepository;
+import com.bbookk.repository.dto.BorrowListDetailsDto;
 import com.bbookk.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -25,6 +30,8 @@ public class UserController {
     private final MemberService memberService;
     private final BooksOfMonthRepository bomRepository;
     private final BCryptPasswordEncoder encoder;
+
+    private final OrderRepository orderRepository;
 
     @GetMapping("/")
     public String home(Model model)
@@ -60,9 +67,11 @@ public class UserController {
     }
 
     @GetMapping("/test")
-    public String test()
+    public ResponseEntity<BorrowListDetailsDto> test(@RequestParam("id")Long id,
+                                                     @RequestParam("bookName")String bookName)
     {
-        return "test";
+        BorrowListDetailsDto res = orderRepository.getBorrowListDetails(id, bookName);
+        return ResponseEntity.ok().body(res);
     }
 
 }
