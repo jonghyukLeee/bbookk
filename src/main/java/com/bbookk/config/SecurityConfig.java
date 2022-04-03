@@ -1,5 +1,7 @@
 package com.bbookk.config;
 
+import com.bbookk.config.auth.CustomOAuth2UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,7 +12,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter{
+
+    @Autowired
+    private CustomOAuth2UserService oAuth2UserService;
 
     private static final String [] staticResources = {
             "/css/**",
@@ -41,19 +46,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
 
                 .formLogin()
-                .loginPage("/loginForm") // 이 경로의 로그인 요청을 필터링
+                .loginPage("/user/login") // 이 경로의 로그인 요청을 필터링
                 .loginProcessingUrl("/login")
                 .usernameParameter("loginId")
                 .defaultSuccessUrl("/")
                 //.successForwardUrl("/member/main")
                 //.failureForwardUrl("/user/loginForm")
-                .permitAll()
                 .and()
 
-                .logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/");
-
+                //Oauth2
+                .oauth2Login()
+                .loginPage("/user/login")
+                .userInfoEndpoint()
+                .userService(oAuth2UserService);
                 //.invalidateHttpSession(true)
     }
 

@@ -36,6 +36,14 @@ public class Member {
         this.role = Role.ROLE_MEMBER; // default role
     }
 
+    @Builder
+    public Member(String name, String loginId) {
+        this.name = name;
+        this.loginId = loginId;
+        this.cash = 500;
+        this.role = Role.ROLE_MEMBER;
+    }
+
     @Embedded
     private Address address;
 

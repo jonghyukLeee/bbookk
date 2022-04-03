@@ -1,4 +1,4 @@
-package com.bbookk.auth;
+package com.bbookk.config.auth;
 
 import com.bbookk.entity.Member;
 import com.bbookk.repository.MemberRepository;
@@ -7,16 +7,34 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 @Getter
-public class CustomUserDetails implements UserDetails {
+public class CustomUserDetails implements UserDetails, OAuth2User {
     private final Member member;
+    private Map<String, Object> attribute;
 
     public CustomUserDetails(Member member) {
         this.member = member;
+    }
+
+    public CustomUserDetails(Member member, Map<String, Object> attribute) {
+        this.member = member;
+        this.attribute = attribute;
+    }
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return attribute;
+    }
+
+    @Override
+    public String getName() {
+        return null;
     }
 
     //해당 유저의 권한을 리턴
@@ -31,6 +49,7 @@ public class CustomUserDetails implements UserDetails {
     public String getPassword() {
         return member.getPassword();
     }
+
 
     @Override
     public String getUsername() {
@@ -58,4 +77,6 @@ public class CustomUserDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
 }

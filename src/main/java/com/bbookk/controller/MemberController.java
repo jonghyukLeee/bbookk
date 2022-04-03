@@ -1,6 +1,6 @@
 package com.bbookk.controller;
 
-import com.bbookk.auth.CustomUserDetails;
+import com.bbookk.config.auth.CustomUserDetails;
 import com.bbookk.controller.form.ModifyForm;
 import com.bbookk.entity.Book;
 import com.bbookk.entity.Member;

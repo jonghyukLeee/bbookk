@@ -1,4 +1,4 @@
-package com.bbookk.auth;
+package com.bbookk.config.auth;
 
 import com.bbookk.entity.Member;
 import com.bbookk.repository.MemberRepository;
@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
 /**
  * config에서 .loginProcessingUrl("/user/login")
@@ -24,7 +23,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
         Member findMember = memberRepository.findByLoginId(loginId);
-        System.out.println(findMember);
         if(findMember == null) throw new UsernameNotFoundException(loginId);
         return new CustomUserDetails(findMember);
         }

@@ -1,10 +1,9 @@
 package com.bbookk.api;
 
-import com.bbookk.auth.CustomUserDetails;
+import com.bbookk.config.auth.CustomUserDetails;
 import com.bbookk.entity.Book;
 import com.bbookk.entity.Member;
 import com.bbookk.repository.BookRepositoryImpl;
-import com.bbookk.repository.OrderRepository;
 import com.bbookk.service.MemberService;
 import com.bbookk.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.servlet.NoHandlerFoundException;
 import reactor.core.publisher.Mono;
 
 import java.util.HashMap;

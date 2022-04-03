@@ -1,6 +1,5 @@
 package com.bbookk.controller;
 
-import com.bbookk.auth.CustomUserDetails;
 import com.bbookk.controller.form.MemberForm;
 import com.bbookk.entity.Address;
 import com.bbookk.entity.BooksOfMonth;
@@ -11,7 +10,6 @@ import com.bbookk.repository.dto.BorrowListDetailsDto;
 import com.bbookk.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -41,7 +38,7 @@ public class UserController {
         return "index";
     }
 
-    @GetMapping("/loginForm")
+    @GetMapping("/user/login")
     public String login()
     {
         return "loginForm";
