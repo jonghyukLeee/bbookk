@@ -1,6 +1,7 @@
 package com.bbookk.controller;
 
 import com.bbookk.config.auth.CustomUserDetails;
+import com.bbookk.controller.form.AddressForm;
 import com.bbookk.controller.form.ModifyForm;
 import com.bbookk.entity.Book;
 import com.bbookk.entity.Member;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -150,7 +152,15 @@ public class MemberController {
                              Model model)
     {
         Member findMember = userDetails.getMember();
-        Page<BorrowBooksDto> list = bookRepository.findBooks(findMember.getId(),findMember.getAddress().getGu(),
+        AddressDto address = memberRepository.getAddress(findMember.getId());
+        System.out.println(address);
+        //주소등록이 안된 유저일떄
+        if(address.getGu() == null)
+        {
+            model.addAttribute("addressForm",new AddressForm());
+            return "registerAddress";
+        }
+        Page<BorrowBooksDto> list = bookRepository.findBooks(findMember.getId(),address.getGu(),
                 query, pageable);
         int startPage = Math.max(1,list.getPageable().getPageNumber()+1);
         int endPage = Math.min(list.getTotalPages(),startPage+4);
@@ -221,5 +231,13 @@ public class MemberController {
         Long memberId = userDetails.getMember().getId();
         orderService.returnRequest(memberId,bookName);
         return "borrowList";
+    }
+
+    @PostMapping("/register/address")
+    public String registerAddress(@AuthenticationPrincipal CustomUserDetails curMember,
+                                  @Valid AddressForm form)
+    {
+        memberService.addAddress(curMember.getMember().getId(),form);
+        return "redirect:/";
     }
 }

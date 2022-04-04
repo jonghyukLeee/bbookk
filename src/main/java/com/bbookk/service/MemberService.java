@@ -1,5 +1,6 @@
 package com.bbookk.service;
 
+import com.bbookk.controller.form.AddressForm;
 import com.bbookk.controller.form.ModifyForm;
 import com.bbookk.entity.*;
 import com.bbookk.repository.BookRepository;
@@ -119,5 +120,11 @@ public class MemberService {
         findBook.setStatus(OrderStatus.REQUESTED);
     }
 
-
+    @Transactional
+    public void addAddress(Long memberId, AddressForm form) {
+        Member findMember = memberRepository.findById(memberId).get();
+        findMember.setAddress(form);
+        System.out.println("before");
+        System.out.println(findMember.getAddress().getGu());
+    }
 }

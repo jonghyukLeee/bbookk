@@ -1,5 +1,6 @@
 package com.bbookk.entity;
 
+import com.bbookk.controller.form.AddressForm;
 import com.bbookk.controller.form.ModifyForm;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +75,11 @@ public class Member {
     public void subCash(int amount)
     {
         this.cash -= amount;
+    }
+
+    public void setAddress(AddressForm form)
+    {
+        this.address = new Address(form.getSi(),form.getGu(),form.getDong());
     }
 
     public void modify(ModifyForm form) {

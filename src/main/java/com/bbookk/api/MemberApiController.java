@@ -99,4 +99,5 @@ public class MemberApiController {
         return ResponseEntity.ok().body(true);
     }
 
+
 }
